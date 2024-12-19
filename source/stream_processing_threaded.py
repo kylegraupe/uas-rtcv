@@ -9,8 +9,6 @@ import pstats
 import cProfile
 import cv2
 import os
-import socket
-import subprocess
 
 import settings
 import model_inference
@@ -43,12 +41,25 @@ def get_first_n_items_from_queue(queue_param, n):
 
 
 def add_to_buffer(frame, buffer_queue):
+    """
+    Adds frame to buffer. Does not exceed buffer size to keep stream in near real-time.
+    :param frame: Image frame to be added to the queue.
+    :param buffer_queue: Buffer queue
+    :return: None
+    """
+
     if buffer_queue.full():
         buffer_queue.get()
     buffer_queue.put(frame)
 
 
 def produce_livestream_buffer(url):
+    """
+    Produces livestream buffer using FFMPEG and custom buffer in Producer-Consumer Threading Paradigm.
+
+    :param url: RTMP URL (in settings.py)
+    :return: None
+    """
     profiler = cProfile.Profile()
     profiler.enable()
 
@@ -79,6 +90,10 @@ def produce_livestream_buffer(url):
 
 
 def consume_livestream_buffer():
+    """
+    Consumes livestream buffer, outputs to display queue for visualization. Consumer function in Producer-Consumer Threading Paradigm.
+    :return: None
+    """
     time.sleep(2)
 
     profiler = cProfile.Profile()
@@ -139,6 +154,10 @@ def save_batch_as_png(image, mask, save_directory, index, prefix='image'):
 
 
 def display_video():
+    """
+    Displays live stream and model mask to OpenCV window.
+    :return: None
+    """
     global is_streaming
     while is_streaming:
         if not DISPLAY_QUEUE.empty():

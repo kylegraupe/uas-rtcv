@@ -21,7 +21,6 @@ def get_ip():
     return IP
 
 # Application Environment
-VERSION = '1.0.0'
 ENVIRONMENT = 'development'
 TRAIN = False
 SHOW_DEBUG_PROFILE = True

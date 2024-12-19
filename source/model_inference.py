@@ -12,7 +12,6 @@ from PIL import Image
 import numpy as np
 
 
-# Define preprocessing steps globally to avoid re-definition
 preprocess = transforms.Compose([
     transforms.Resize((704, 1280)),  # Resize to model input dimensions
     transforms.ToTensor(),           # Convert to tensor
@@ -52,48 +51,20 @@ def image_to_tensor(img, trained_model, device):
     Returns:
         output_labels_np: A numpy array representing the predicted class labels.
     """
-    # print(f'Pre-Preprocessing Image')
-    # print(np.array(img).shape)
+
     if isinstance(img, list):
         img = img[0]
     elif isinstance(img, Image.Image):
         img = img
 
-    # Preprocess the image
     input_tensor = preprocess(img).unsqueeze(0).to(device)  # Add batch dimension and move to device
 
-    # Make the prediction
     with torch.no_grad():
         output = trained_model(input_tensor)
 
-    # Convert the output to class labels and then to a numpy array
     output_labels_np = torch.argmax(output, dim=1).squeeze().cpu().numpy()
 
     return output_labels_np
-
-# def batch_to_tensor(images, trained_model, device):
-#     """
-#     Converts a batch of input images to tensors and makes predictions using a trained model.
-#
-#     Args:
-#         images (list of PIL.Image.Image): List of input images to be converted.
-#         trained_model (nn.Module): The trained model used for making predictions.
-#         device (torch.device): The device to perform inference on (GPU or CPU).
-#
-#     Returns:
-#         output_labels_np (numpy.ndarray): A numpy array containing the predicted class labels for each image.
-#     """
-#     # Preprocess each image and stack them into a batch
-#     batch_tensors = torch.stack([preprocess(img) for img in images]).to(device)
-#
-#     # Make the prediction
-#     with torch.no_grad():
-#         outputs = trained_model(batch_tensors)
-#
-#     # Convert the output to class labels and then to a numpy array
-#     output_labels_np = torch.argmax(outputs, dim=1).cpu().numpy()
-#
-#     return output_labels_np
 
 def images_to_tensor(images, trained_model, device):
     """

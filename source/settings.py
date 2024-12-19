@@ -12,11 +12,11 @@ VERSION = '1.0.0'
 ENVIRONMENT = 'development'
 TRAIN = False
 SHOW_DEBUG_PROFILE = True
-UI_ON = True
+UI_ON = False
 
 # RTMP/NGINX settings
 LISTENING_PORT=1935
-ip_address = '10.0.0.17'
+ip_address = '10.0.0.105'
 # ip_address = '172.20.10.2' # Hotspot
 RTMP_URL=f'rtmp://{ip_address}:{LISTENING_PORT}/live/'
 
@@ -57,7 +57,7 @@ NUM_CLASSES = 23
 
 # Stream properties
 INPUT_FPS = 10 # Keep low when model is on, high when model is off. Too high will cause ffmpeg buffer to fill up.
-OUTPUT_FPS = 2
+OUTPUT_FPS = 0.1
 NUM_THREADS = 4
 MAX_BUFFER_SIZE = 5
 PIPE_STDOUT = True
@@ -90,7 +90,7 @@ FOV = 82.1
 SIDE_BY_SIDE = True # Display both original and segmented frames side-by-side
 
 # Postprocessing properties
-DILATION_ON = True
+DILATION_ON = False
 DILATION_KERNEL = np.ones((5, 5), np.uint8)
 DILATION_ITERATIONS = 1
 
@@ -98,13 +98,13 @@ EROSION_ON = False
 EROSION_KERNEL = np.ones((5, 5), np.uint8)
 EROSION_ITERATIONS = 1
 
-MEDIAN_FILTERING_ON = True
+MEDIAN_FILTERING_ON = False
 MEDIAN_FILTERING_KERNEL_SIZE = 11
 
 # GAUSSIAN_SMOOTHING_ON = False
 GAUSSIAN_SMOOTHING_KERNEL_SHAPE = (5, 5)
 
-CRF_ON = True
+CRF_ON = False
 
 # Not Working
 ACTIVE_CONTOURS_ON = False

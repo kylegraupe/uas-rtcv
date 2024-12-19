@@ -72,6 +72,8 @@ def livestream_executive_ui(url, app):
     app.process = process
 
     buffer_queue = queue.Queue(maxsize=settings.MAX_BUFFER_SIZE)
+    print(f'Buffer Queue: ')
+    print(buffer_queue)
 
     while app.is_streaming:
         # Read frame in byte format

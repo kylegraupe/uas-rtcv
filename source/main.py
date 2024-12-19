@@ -28,12 +28,12 @@ def main():
 
     if settings.UI_ON:
         root = tk.Tk()
-        # app = user_interface.StreamApp(root,
-        #                                lambda: stream_processing.livestream_executive_ui(settings.RTMP_URL, app),
-        #                                lambda: app.stop_stream())
         app = user_interface.StreamApp(root,
-                                       lambda: stream_processing_threaded.threaded_livestream_processing_executive(app),
+                                       lambda: stream_processing.livestream_executive_ui(settings.RTMP_URL, app),
                                        lambda: app.stop_stream())
+        # app = user_interface.StreamApp(root,
+        #                                lambda: stream_processing_threaded.threaded_livestream_processing_executive(app),
+        #                                lambda: app.stop_stream())
         root.mainloop()
     else:
         # stream_processing.livestream_executive(settings.RTMP_URL)

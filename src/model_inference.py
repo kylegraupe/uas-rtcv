@@ -13,9 +13,9 @@ import numpy as np
 
 
 preprocess = transforms.Compose([
-    transforms.Resize((704, 1280)),  # Resize to model input dimensions
-    transforms.ToTensor(),           # Convert to tensor
-    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  # Normalize
+    transforms.Resize((704, 1280)),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
 
@@ -31,12 +31,12 @@ def load_segmentation_model(model_path: str) -> tuple:
     """
     device = torch.device('mps' if torch.cuda.is_available() else 'cpu')
     model = torch.load(model_path, map_location=device)
-    model.to(device)  # Move model to the device
+    model.to(device)
     print(f'\nModel loaded from "{model_path}" at time {time.ctime()}')
 
-    model.eval()  # Set the model to evaluation mode
+    model.eval()
     print(f'Model set to evaluation mode at time {time.ctime()}')
-    return model, device  # Return the device as well
+    return model, device
 
 
 def image_to_tensor(img: Image, trained_model, device: str) -> np.array:
@@ -57,7 +57,7 @@ def image_to_tensor(img: Image, trained_model, device: str) -> np.array:
     elif isinstance(img, Image.Image):
         img = img
 
-    input_tensor = preprocess(img).unsqueeze(0).to(device)  # Add batch dimension and move to device
+    input_tensor = preprocess(img).unsqueeze(0).to(device)
 
     with torch.no_grad():
         output = trained_model(input_tensor)
@@ -78,14 +78,11 @@ def images_to_tensor(images: np.array, trained_model, device: str) -> np.array:
     Returns:
         output_labels_np (numpy.ndarray): A numpy array containing the predicted class labels for each image.
     """
-    # Preprocess each image and stack them into a batch
     batch_tensors = torch.stack([preprocess(img) for img in images]).to(device)
 
-    # Make the prediction
     with torch.no_grad():
         outputs = trained_model(batch_tensors)
 
-    # Convert the output to class labels and then to a numpy array
     output_labels_np = torch.argmax(outputs, dim=1).cpu().numpy()
 
     return output_labels_np

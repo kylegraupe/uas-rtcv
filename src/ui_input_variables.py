@@ -3,7 +3,7 @@ This file contains the settings that are made available to the user interface.
 """
 
 # Stream Properties
-OUTPUT_FPS=0.4
+OUTPUT_FPS=10
 
 # Postprocessing properties
 GAUSSIAN_SMOOTHING_ON = False

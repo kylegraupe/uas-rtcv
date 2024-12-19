@@ -21,19 +21,18 @@ import ui_input_variables
 class StreamApp:
     def __init__(self, root, start_stream_callback, stop_stream_callback):
         # Set the theme colors
-        self.bg_color = "#1e1e2e"  # Dark purple
-        self.fg_color = "#ffffff"  # White
-        self.button_color = "#5a5a8b"  # Dark purple-grey
-        self.button_text_color = "#000000"  # Black
-        self.entry_bg_color = "#2b2b3c"  # Slightly lighter purple
-        self.entry_fg_color = "#ffffff"  # White
-        self.video_label_bg = "#000000"  # Black for video background
+        self.bg_color = "#1e1e2e"
+        self.fg_color = "#ffffff"
+        self.button_color = "#5a5a8b"
+        self.button_text_color = "#000000"
+        self.entry_bg_color = "#2b2b3c"
+        self.entry_fg_color = "#ffffff"
+        self.video_label_bg = "#000000"
 
         self.root = root
         self.root.title("RTMP Stream GUI")
         self.start_stream_callback = start_stream_callback
         self.stop_stream_callback = stop_stream_callback
-        # self.stream_thread = None
         self.is_streaming = False
         self.process = None
 
@@ -102,13 +101,10 @@ class StreamApp:
         """
         logo_path = "/Users/kylegraupe/Documents/Programming/GitHub/Computer Vision Dataset Generator/real_time_semantic_segmentation_using_dji_drone/assets/graupe.io logo 1.png"
         logo_image = Image.open(logo_path)
-        logo_image = logo_image.resize((250, 150))  # Adjust size as needed
+        logo_image = logo_image.resize((250, 150))
+
         self.logo_imgtk = ImageTk.PhotoImage(logo_image)
-
-        # Create a label for the logo
         self.logo_label = tk.Label(self.root, image=self.logo_imgtk, bg=self.bg_color, bd=2, relief="solid")
-
-        # Position the logo in the third row, first column
         self.logo_label.grid(row=2, column=0, padx=20, pady=20, sticky="nsew")  # Margin of 20 pixels
 
     def create_input_settings(self):
@@ -129,48 +125,39 @@ class StreamApp:
         -------
         None
         """
-        # Title for the input settings frame
         tk.Label(self.input_frame, text="Input Settings", bg=self.bg_color, fg=self.fg_color,
                  font=("Arial", 16, "bold")).grid(row=0, column=0, columnspan=2, pady=10)
-
-        # Output FPS setting
         tk.Label(self.input_frame, text="Output FPS:", bg=self.bg_color, fg=self.fg_color).grid(row=1, column=0,
                                                                                                 sticky="w")
         self.output_fps_entry = tk.Entry(self.input_frame, bg=self.entry_bg_color, fg=self.entry_fg_color)
         self.output_fps_entry.insert(0, str(settings.OUTPUT_FPS))
         self.output_fps_entry.grid(row=1, column=1, padx=10, pady=10, sticky="ew")
 
-        # Toggle buttons for post-processing methods
         tk.Label(self.input_frame, text="Post-Processing Methods", bg=self.bg_color, fg=self.fg_color,
                  font=("Arial", 14)).grid(row=2, column=0, columnspan=2, pady=10)
 
-        # CRF Toggle Button
         self.crf_var = tk.BooleanVar(value=ui_input_variables.CRF_ON)
         self.crf_toggle = tk.Checkbutton(self.input_frame, text="Enable Conditional Random Field",
                                          variable=self.crf_var, bg=self.bg_color,
                                          fg=self.fg_color, command=self.toggle_crf)
         self.crf_toggle.grid(row=7, column=0, columnspan=2, padx=10, pady=5, sticky="w")
 
-        # Erosion Toggle Button
         self.erosion_var = tk.BooleanVar(value=ui_input_variables.EROSION_ON)
         self.erosion_toggle = tk.Checkbutton(self.input_frame, text="Enable Erosion", variable=self.erosion_var,
                                              bg=self.bg_color, fg=self.fg_color, command=self.toggle_erosion)
         self.erosion_toggle.grid(row=4, column=0, columnspan=2, padx=10, pady=5, sticky="w")
 
-        # Dilation Toggle Button
         self.dilation_var = tk.BooleanVar(value=ui_input_variables.DILATION_ON)
         self.dilation_toggle = tk.Checkbutton(self.input_frame, text="Enable Dilation", variable=self.dilation_var,
                                               bg=self.bg_color, fg=self.fg_color, command=self.toggle_dilation)
         self.dilation_toggle.grid(row=3, column=0, columnspan=2, padx=10, pady=5, sticky="w")
 
-        # Gaussian Smoothing Toggle Button
         self.gaussian_smoothing_var = tk.BooleanVar(value=ui_input_variables.GAUSSIAN_SMOOTHING_ON)
         self.gaussian_smoothing_toggle = tk.Checkbutton(self.input_frame, text="Enable Gaussian Smoothing",
                                                         variable=self.gaussian_smoothing_var, bg=self.bg_color,
                                                         fg=self.fg_color, command=self.toggle_gaussian_smoothing)
         self.gaussian_smoothing_toggle.grid(row=6, column=0, columnspan=2, padx=10, pady=5, sticky="w")
 
-        # Gaussian Smoothing Toggle Button
         self.median_smoothing_var = tk.BooleanVar(value=ui_input_variables.MEDIAN_FILTERING_ON)
         self.median_smoothing_toggle = tk.Checkbutton(self.input_frame, text="Enable Median Smoothing",
                                                       variable=self.median_smoothing_var, bg=self.bg_color,
@@ -185,15 +172,12 @@ class StreamApp:
         pos_highlight_color = "medium sea green"
         neg_highlight_color = "indian red"
 
-        # Update the post-processing section of the stream characteristics frame
         for widget in self.stream_char_frame.winfo_children():
             widget.destroy()  # Clear the existing labels
 
-        # Recreate the labels with updated colors
         frame_titles_fg = 'black'
         frame_titles_bg = 'light slate gray'
 
-        # Stream characteristics
         tk.Label(self.stream_char_frame, text="STREAM CHARACTERISTICS:", underline=True, bg=frame_titles_bg,
                  fg=frame_titles_fg).grid(row=0, column=0, sticky="w")
         tk.Label(self.stream_char_frame,

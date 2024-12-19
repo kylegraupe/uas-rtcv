@@ -12,7 +12,6 @@ def get_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.settimeout(0)
     try:
-        # doesn't even have to be reachable
         s.connect(('10.254.254.254', 1))
         IP = s.getsockname()[0]
     except Exception:
@@ -31,7 +30,6 @@ UI_ON = False
 # RTMP/NGINX settings
 LISTENING_PORT=1935
 ip_address = get_ip()
-# ip_address = '172.20.10.2' # Hotspot
 RTMP_URL=f'rtmp://{ip_address}:{LISTENING_PORT}/live/'
 
 # Model properties

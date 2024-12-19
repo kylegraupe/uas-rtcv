@@ -67,7 +67,6 @@ def produce_livestream_buffer(url):
 
         in_frame = np.frombuffer(in_bytes, np.uint8).reshape([720, 1280, 3]).copy()
         add_to_buffer(in_frame, BUFFER_QUEUE)
-        # print(f'Buffer queue size: {BUFFER_QUEUE.qsize()}')
 
 
 def consume_livestream_buffer():
@@ -82,41 +81,22 @@ def consume_livestream_buffer():
                 frame_img = Image.fromarray(frame)
                 frame_batch_resized.append(frame_img)
 
-            # profiler = cProfile.Profile()
-            # profiler.enable()
-
             segmentation_result_batch = model_inference.images_to_tensor(
                 frame_batch_resized,
                 settings.MODEL,
                 settings.DEVICE
             ).astype(np.uint8)
 
-            # profiler.disable()
-            # stats = pstats.Stats(profiler).sort_stats('cumtime')
-            # stats.print_stats()
-
             # _, segmentation_results = mask_postprocessing.apply_mask_postprocessing(buffer_frame_resized,
             #                                                                         segmentation_results_rgb)
 
             if settings.SIDE_BY_SIDE:
                 batch_tuple = (frame_batch_resized, segmentation_result_batch)
-                # print(f'Batch Tuple: {batch_tuple}')
-                # print(f'Batch Tuple Size: {len(batch_tuple)}')
-                # print(f'Frame Batch Size: {len(frame_batch_resized)}')
-                # print(f'Segmentation Batch Size: {segmentation_result_batch.shape}')
 
                 DISPLAY_QUEUE.put(batch_tuple)
-                # DISPLAY_QUEUE.task_done()
-                # print(f'Display queue size 098: {DISPLAY_QUEUE.qsize()}')
-
-                # output_frame = np.hstack((buffer_frame_resized, segmentation_results))
             else:
                 output_batch = segmentation_result_batch
         else:
-            # buffer_frame = BUFFER_QUEUE.get()
-            # if buffer_frame is None:
-            #     break
-            # BUFFER_QUEUE.task_done()
             break
 
 def save_batch_as_png(image, mask, save_directory, index, prefix='image'):
@@ -147,16 +127,10 @@ def display_video():
     while is_streaming:
         if not DISPLAY_QUEUE.empty():
             display_queue_size = DISPLAY_QUEUE.qsize()
-            # print(f'Display queue size: {display_queue_size}')
-
             og_img, mask = DISPLAY_QUEUE.get()
-            # print(f'og_img_shape: {len(og_img)}')
-            # print(f'mask_shape: {mask.shape}')
-
             np_og_img = np.array(og_img)
             np_mask = np.array(mask)
-            # print(f'np_img_shape: {np_og_img.shape}')
-            # print(np_mask.shape)
+
             if mask is None:
                 break
 
@@ -168,25 +142,12 @@ def display_video():
                     print('Mismatch in image batches')
                     break
 
-                # Prepare images for display
                 og_img = np_og_img[i]
                 mask_img = masks[i]
-
-                # print(f'og_img: {i}')
-                # print(f'mask_img: {i}')
-
-                # save_batch_as_png([og_img], [mask_img], index=i, save_directory='/Users/kylegraupe/Documents/Programming/GitHub/Computer Vision Dataset Generator/real_time_semantic_segmentation_using_dji_drone/sample_results')
-
-                # Stack images side-by-side or as needed
                 combined_img = np.vstack((og_img, settings.COLOR_MAP[mask_img]))
 
-                # Display the combined image
                 cv2.imshow("Frame", combined_img)
 
-                # Introduce a 2-second delay
-                # time.sleep(2)
-
-        # Check for exit keypress
         if cv2.waitKey(1) & 0xFF == ord('q'):
             is_streaming = False
             break

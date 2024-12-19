@@ -4,8 +4,22 @@ This file contains the settings and global variables for the application.
 
 import numpy as np
 import cv2
+import socket
 
 import model_inference
+
+def get_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.settimeout(0)
+    try:
+        # doesn't even have to be reachable
+        s.connect(('10.254.254.254', 1))
+        IP = s.getsockname()[0]
+    except Exception:
+        IP = '127.0.0.1'
+    finally:
+        s.close()
+    return IP
 
 # Application Environment
 VERSION = '1.0.0'
@@ -16,12 +30,12 @@ UI_ON = False
 
 # RTMP/NGINX settings
 LISTENING_PORT=1935
-ip_address = '10.0.0.105'
+ip_address = get_ip()
 # ip_address = '172.20.10.2' # Hotspot
 RTMP_URL=f'rtmp://{ip_address}:{LISTENING_PORT}/live/'
 
 # Model properties
-MODEL_PATH = '/Users/kylegraupe/Documents/Programming/GitHub/Computer Vision Dataset Generator/real_time_semantic_segmentation_using_dji_drone/trained_models/Unet-Mobilenet_V3.pt'
+MODEL_PATH = '../trained_models/Unet-Mobilenet_V3.pt'
 MODEL, DEVICE = model_inference.load_segmentation_model(MODEL_PATH)
 MODEL_ENCODER_NAME = MODEL.encoder.__class__.__name__
 MODEL_DECODER_NAME = MODEL.decoder.__class__.__name__

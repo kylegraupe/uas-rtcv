@@ -19,7 +19,7 @@ preprocess = transforms.Compose([
 ])
 
 
-def load_segmentation_model(model_path):
+def load_segmentation_model(model_path: str) -> tuple:
     """
     Load a trained segmentation model from a file.
 
@@ -39,7 +39,7 @@ def load_segmentation_model(model_path):
     return model, device  # Return the device as well
 
 
-def image_to_tensor(img, trained_model, device):
+def image_to_tensor(img: Image, trained_model, device: str) -> np.array:
     """
     Converts an input image to a tensor and makes a prediction using a trained model.
 
@@ -66,7 +66,7 @@ def image_to_tensor(img, trained_model, device):
 
     return output_labels_np
 
-def images_to_tensor(images, trained_model, device):
+def images_to_tensor(images: np.array, trained_model, device: str) -> np.array:
     """
     Converts a batch of input images to tensors and makes predictions using a trained model.
 

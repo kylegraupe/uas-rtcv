@@ -12,7 +12,7 @@ import settings
 import ui_input_variables
 
 
-def ensure_rgb(segmentation_mask):
+def ensure_rgb(segmentation_mask: np.array) -> np.array:
     """ Ensure the segmentation mask is in RGB format. """
     if len(segmentation_mask.shape) == 3 and segmentation_mask.shape[2] == 3:
         return segmentation_mask
@@ -109,7 +109,7 @@ def apply_crf(original_image, segmentation_mask):
 
     return mapped_inference_labels
 
-def apply_mask_postprocessing(raw, mask_rgb_np):
+def apply_mask_postprocessing(raw: np.array, mask_rgb_np: np.array) -> tuple:
     mask = mask_rgb_np
     if ui_input_variables.CRF_ON:
         mask = apply_crf(raw, mask_rgb_np)

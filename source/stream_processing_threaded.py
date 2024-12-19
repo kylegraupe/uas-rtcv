@@ -1,7 +1,6 @@
 import time
 import ffmpeg
 import numpy as np
-import cv2
 from PIL import Image
 import queue
 import threading
@@ -14,11 +13,11 @@ import settings
 import model_inference
 import mask_postprocessing
 
-is_streaming = True
-BUFFER_QUEUE = queue.Queue(maxsize=settings.MAX_BUFFER_SIZE)
-DISPLAY_QUEUE = queue.Queue(maxsize=5)
+is_streaming: bool = True
+BUFFER_QUEUE: queue.Queue = queue.Queue(maxsize=settings.MAX_BUFFER_SIZE)
+DISPLAY_QUEUE: queue.Queue = queue.Queue(maxsize=5)
 
-def get_first_n_items_from_queue(queue_param, n):
+def get_first_n_items_from_queue(queue_param: queue.Queue, n: int) -> list:
     """
     Retrieves the first 'n' items from the queue.
 
@@ -40,7 +39,7 @@ def get_first_n_items_from_queue(queue_param, n):
     return items
 
 
-def add_to_buffer(frame, buffer_queue):
+def add_to_buffer(frame: np.array, buffer_queue: queue.Queue) -> None:
     """
     Adds frame to buffer. Does not exceed buffer size to keep stream in near real-time.
     :param frame: Image frame to be added to the queue.
@@ -53,7 +52,7 @@ def add_to_buffer(frame, buffer_queue):
     buffer_queue.put(frame)
 
 
-def produce_livestream_buffer(url):
+def produce_livestream_buffer(url: str) -> None:
     """
     Produces livestream buffer using FFMPEG and custom buffer in Producer-Consumer Threading Paradigm.
 
@@ -89,7 +88,7 @@ def produce_livestream_buffer(url):
         stats.print_stats()
 
 
-def consume_livestream_buffer():
+def consume_livestream_buffer() -> None:
     """
     Consumes livestream buffer, outputs to display queue for visualization. Consumer function in Producer-Consumer Threading Paradigm.
     :return: None
@@ -153,7 +152,7 @@ def save_batch_as_png(image, mask, save_directory, index, prefix='image'):
         print(f'Saved {image_filename} and {mask_filename}')
 
 
-def display_video():
+def display_video() -> None:
     """
     Displays live stream and model mask to OpenCV window.
     :return: None

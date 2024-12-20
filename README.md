@@ -6,7 +6,7 @@ This application takes a video stream from a DJI drone via RTMP Server and perfo
 
 ## 🎬 Application Trailer ⚠️
 
-To watch a short clip of the application in use, click [here.](https://www.graupe.io/portfolio/real-time-computer-vision-streamed-via-dji-drone)
+To watch a short clip of the application in use, click [here.](https://www.graupe.io/portfolio/real-time-computer-vision-streamed-via-dji-drone) on graupe.io!
 
 Stay tuned! Newest version solves latency issue and is in near real time! Trailer to come soon!
 

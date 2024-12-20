@@ -47,6 +47,7 @@ This application enables the use of computer vision on a DJI drone that does **N
   - Giving operators the ability to record all information from a given test flight is crucial for any application of drone/UAS technology as projects operate in planned stages with test flights.
   - Onboard data recording is also crucial in capturing real-time data for post-flight processing.
   - Logging currently includes separate logs generated for tests as well as core application runs.
+  - Note: Ff you would like to include your logs in the GitHub repository, navigate to **.gitignore** and comment-out or remove the *.log line from the file.
 --- 
 
 ## SETUP (MacOS Apple Silicon):

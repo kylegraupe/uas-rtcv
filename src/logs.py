@@ -7,18 +7,15 @@ from datetime import datetime
 import pandas as pd
 import os
 
-# Define log directories
 REPO_ROOT = os.path.dirname(os.path.abspath(__file__))
 LOG_DIR = os.path.join(REPO_ROOT, "..", "logs")
 APP_LOG_DIR = os.path.join(LOG_DIR, "application_logs")
 TEST_LOG_DIR = os.path.join(LOG_DIR, "test_logs")
 DATA_LOG_FILE = os.path.join(LOG_DIR, "log_data.csv")
 
-# Create necessary directories
 os.makedirs(APP_LOG_DIR, exist_ok=True)
 os.makedirs(TEST_LOG_DIR, exist_ok=True)
 
-# Generate log file names with timestamps
 timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 APP_LOG_FILE = os.path.join(APP_LOG_DIR, f"app_{timestamp}.log")
 TEST_LOG_FILE = os.path.join(TEST_LOG_DIR, f"test_{timestamp}.log")

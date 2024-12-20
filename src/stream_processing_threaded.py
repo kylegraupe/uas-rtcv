@@ -1,3 +1,7 @@
+"""
+Threaded implementation of RTMP stream. Uses Producer-Consumer Paradigm to keep stream in near real-time.
+"""
+
 import time
 import ffmpeg
 import numpy as np

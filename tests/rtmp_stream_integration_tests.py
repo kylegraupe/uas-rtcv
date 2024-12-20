@@ -1,3 +1,7 @@
+"""
+RTMP Stream integration tests.
+"""
+
 import unittest
 import threading
 import queue

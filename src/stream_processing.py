@@ -1,3 +1,7 @@
+"""
+Non-threaded implementation of RTMP stream. Integrated with user tkinter interface.
+"""
+
 import time
 import ffmpeg
 import numpy as np

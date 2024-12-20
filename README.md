@@ -43,7 +43,10 @@ This application enables the use of computer vision on a DJI drone that does **N
   - Python's TkInter is not suitable for high-frame displaying, therefore UI needs to be reworked in a new framework due to multithreading successes.
 - **Custom Stream Buffer**: Custom implementation of Producer-Consumer Threading paradigm to keep stream in near real-time.
   - Resolves the growing latency problem associated with more naive RTMP stream handlers.
-
+- **Robust Logging**: The application uses logging to appropriately record application and testing runs to be used during test flights of the UAS.
+  - Giving operators the ability to record all information from a given test flight is crucial for any application of drone/UAS technology as projects operate in planned stages with test flights.
+  - Onboard data recording is also crucial in capturing real-time data for post-flight processing.
+  - Logging currently includes separate logs generated for tests as well as core application runs.
 --- 
 
 ## SETUP (MacOS Apple Silicon):

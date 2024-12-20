@@ -6,7 +6,7 @@ import numpy as np
 import cv2
 import socket
 
-import model_inference
+from src import model_inference
 
 def get_ip() -> str:
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -16,7 +16,7 @@ def get_ip() -> str:
         IP = s.getsockname()[0]
         print(f'IP Address found. Address: {IP}')
     except Exception as e:
-        IP = '127.0.0.1'
+        IP = '127.0.0.1' # Default localhost IP
         print(f'IP Address not found. Reverting to default: {IP}')
     finally:
         s.close()

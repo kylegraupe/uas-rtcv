@@ -24,8 +24,13 @@ def get_ip() -> str:
 ENVIRONMENT: str = 'development'
 TRAIN: bool = False
 SHOW_DEBUG_PROFILE: bool = True
-UI_ON: bool = False
-RUN_TESTS_PRIOR_TO_EXECUTION: bool = True
+
+# Primary Settings
+NONTHREADED_UI_ON: bool = True
+THREADED_IMPLEMENTATION: bool = False
+RUN_TESTS_PRIOR_TO_EXECUTION: bool = False # FIXME: Keep false for now. Running into circular imports.
+
+
 
 # RTMP/NGINX settings
 LISTENING_PORT: int = 1935
@@ -74,7 +79,6 @@ NUM_THREADS: int = 4
 MAX_BUFFER_SIZE: int = 5
 PIPE_STDOUT: bool = True
 PIPE_STDERR: bool = True
-THREADED_IMPLEMENTATION = True
 
 # Frame properties
 FRAME_WIDTH: int = 1280

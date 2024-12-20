@@ -6,25 +6,25 @@ import time
 import cProfile
 import pstats
 import tkinter as tk
+import threading
 
 import settings
 import logs
 import stream_processing
 import user_interface
 import stream_processing_threaded
-from tests import test_executive
 
 
 def execute_application() -> None:
-    if settings.UI_ON:
+
+    if settings.NONTHREADED_UI_ON:
         root = tk.Tk()
         app = user_interface.StreamApp(root,
                                        lambda: stream_processing.livestream_executive_ui(settings.RTMP_URL, app),
                                        lambda: app.stop_stream())
         root.mainloop()
 
-    if settings.RUN_TESTS_PRIOR_TO_EXECUTION:
-        test_executive.execute_all_unit_tests()
+
     if settings.THREADED_IMPLEMENTATION:
         stream_processing_threaded.stream_processing_threaded_executive()
 
@@ -37,7 +37,7 @@ if __name__ == "__main__":
                    f'\t\tRTMP URL: {settings.RTMP_URL}\n'
                    f'\t\tIP Address: {settings.IP_ADDRESS}\n'
                    f'\t\tListening Port: {settings.LISTENING_PORT}\n'
-                   f'\t\tUI On: {settings.UI_ON}\n'
+                   f'\t\tUI On: {settings.NONTHREADED_UI_ON}\n'
                    f'\t\tRun Tests Before Application Execution: {settings.RUN_TESTS_PRIOR_TO_EXECUTION}\n'
                    f'\t\tThreaded Implementation: {settings.THREADED_IMPLEMENTATION}\n'
                    f'\n'
@@ -54,15 +54,16 @@ if __name__ == "__main__":
                    f'\t\tConditional Random Field On: {settings.CRF_ON}'
                    f'\n'
                    )
+    print("Function running on thread:", threading.current_thread().name)
 
-    if settings.SHOW_DEBUG_PROFILE:
-        profiler = cProfile.Profile()
-        profiler.enable()
+    # if settings.SHOW_DEBUG_PROFILE:
+    #     profiler = cProfile.Profile()
+    #     profiler.enable()
 
-        execute_application()
+    execute_application()
 
-        profiler.disable()
-        stats = pstats.Stats(profiler).sort_stats('cumtime')
-        stats.print_stats()
-    else:
-        execute_application()
+        # profiler.disable()
+        # stats = pstats.Stats(profiler).sort_stats('cumtime')
+        # stats.print_stats()
+    # else:
+        # execute_application()

@@ -16,6 +16,11 @@ def device_is_in_list(device: str) -> bool:
 def path_exists(path: str) -> bool:
     return os.path.exists(path)
 
+def both_not_true(a: bool, b:bool) -> bool:
+    if (a and a == b) or (b and a == b):
+        return False
+    return True
+
 class TestSettingsViability(unittest.TestCase):
     """
     Class to test data cleaning methods using example cases.
@@ -23,11 +28,14 @@ class TestSettingsViability(unittest.TestCase):
 
     def setUp(self):
         """Set up test preconditions and log the start of each test."""
-        logs.log_event(f"Starting test: {self._testMethodName}")
+        logs.log_event(f"Starting test: {self._testMethodName}", logger_type='tests')
+        # print(f"Test: {self._testMethodName} running on thread:", threading.current_thread().name)
 
     def tearDown(self):
         """Log the completion of each test."""
-        logs.log_event(f"Test completed: {self._testMethodName}")
+        logs.log_event(f"Test completed: {self._testMethodName}", logger_type='tests')
+        # print(f"Test: {self._testMethodName} running on thread:", threading.current_thread().name)
+
 
     def test_UNet_frame_resize_dimension_viability(self):
         """U-Net Architectures require frame dimensions must be divisible by 32. Frames are resized (trimmed) to meet this criterion."""
@@ -49,7 +57,7 @@ class TestSettingsViability(unittest.TestCase):
 
     def test_get_IP_function(self):
         """Test to ensure IP address does not return default IP of 127.0.0.1"""
-        self.assertNotEqual(settings.IP_ADDRESS, f'127.0.0.1', msg=f'IP Address: {settings.ip_address} has reverted to localhost value.')
+        self.assertNotEqual(settings.IP_ADDRESS, f'127.0.0.1', msg=f'IP Address: {settings.IP_ADDRESS} has reverted to localhost value.')
 
     def test_pytorch_device(self):
         """Test to ensure that the device used in model training is either the CPU or GPU"""
@@ -70,3 +78,8 @@ class TestSettingsViability(unittest.TestCase):
                          msg=f'Resized frame width: {settings.RESIZE_FRAME_WIDTH} is not equal to Display frame width: {settings.VIDEO_DISPLAY_WIDTH}.')
         self.assertEqual(settings.RESIZE_FRAME_HEIGHT, settings.VIDEO_DISPLAY_HEIGHT,
                          msg=f'Resized frame height: {settings.RESIZE_FRAME_HEIGHT} is not equal to Display frame height: {settings.VIDEO_DISPLAY_HEIGHT}.')
+
+    def test_threaded_vs_non_threaded_implementation(self):
+        """Ensure UI_ON and THREADED_IMPLEMENTATION are not on at the same time."""
+        self.assertTrue(both_not_true(settings.NONTHREADED_UI_ON, settings.THREADED_IMPLEMENTATION),
+                        msg=f'Threaded and Non-Threaded implementations cannot both be true at the same time. Check settings.py.')

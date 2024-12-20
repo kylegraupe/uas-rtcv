@@ -75,6 +75,7 @@ NUM_THREADS: int = 4
 MAX_BUFFER_SIZE: int = 5
 PIPE_STDOUT: bool = True
 PIPE_STDERR: bool = True
+THREADED_IMPLEMENTATION = True
 
 # Frame properties
 FRAME_WIDTH: int = 1280

@@ -4,6 +4,7 @@ Unit tests for the src/settings.py file.
 
 import unittest
 import os
+
 from src import settings, logs
 
 def is_divisible(number: int, divisor: int) -> bool:
@@ -22,11 +23,11 @@ class TestSettingsViability(unittest.TestCase):
 
     def setUp(self):
         """Set up test preconditions and log the start of each test."""
-        logging.log_event(f"Starting test: {self._testMethodName}")
+        logs.log_event(f"Starting test: {self._testMethodName}")
 
     def tearDown(self):
         """Log the completion of each test."""
-        logging.log_event(f"Test completed: {self._testMethodName}")
+        logs.log_event(f"Test completed: {self._testMethodName}")
 
     def test_UNet_frame_resize_dimension_viability(self):
         """U-Net Architectures require frame dimensions must be divisible by 32. Frames are resized (trimmed) to meet this criterion."""

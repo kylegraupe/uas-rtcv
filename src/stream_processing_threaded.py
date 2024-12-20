@@ -177,8 +177,7 @@ def display_video() -> None:
             break
 
 
-if __name__ == "__main__":
-
+def stream_processing_threaded_executive() -> None:
     producer_thread = threading.Thread(target=produce_livestream_buffer, args=(settings.RTMP_URL,))
     consumer_thread = threading.Thread(target=consume_livestream_buffer)
 
@@ -186,6 +185,10 @@ if __name__ == "__main__":
     consumer_thread.start()
 
     display_video()
+
+if __name__ == "__main__":
+    stream_processing_threaded_executive()
+
 
     # producer_thread.join()
     # consumer_thread.join()

@@ -7,15 +7,12 @@ from datetime import datetime
 import pandas as pd
 import os
 
-# Define paths
 REPO_ROOT = os.path.dirname(os.path.abspath(__file__))
 LOG_DIR = os.path.join(REPO_ROOT, "..", "logs")
 DATA_LOG_FILE = os.path.join(LOG_DIR, "log_data.csv")
 
-# Ensure the log directory exists
 os.makedirs(LOG_DIR, exist_ok=True)
 
-# Generate a unique log file name based on the current timestamp
 timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 LOG_FILE = os.path.join(LOG_DIR, f"app_{timestamp}.log")
 
@@ -26,14 +23,12 @@ def setup_logger():
     logger = logging.getLogger("CustomLogger")
     logger.setLevel(logging.DEBUG)
 
-    # File handler
     file_handler = logging.FileHandler(LOG_FILE)
     file_handler.setLevel(logging.DEBUG)
     file_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
     file_handler.setFormatter(file_formatter)
     logger.addHandler(file_handler)
 
-    # Console handler
     console_handler = logging.StreamHandler()
     console_handler.setLevel(logging.INFO)
     console_formatter = logging.Formatter("%(message)s")
@@ -42,10 +37,8 @@ def setup_logger():
 
     return logger
 
-# Initialize logger
 logger = setup_logger()
 
-# Utility function to append data to a CSV file
 def append_to_log_data(data):
     """
     Append structured log data to a CSV file using pandas.
@@ -62,7 +55,6 @@ def append_to_log_data(data):
     else:
         df.to_csv(DATA_LOG_FILE, index=False)
 
-# Logging utility functions
 def log_event(event_message):
     """Log an informational event."""
     logger.info(event_message)

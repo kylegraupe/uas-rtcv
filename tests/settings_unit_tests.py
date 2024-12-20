@@ -1,13 +1,7 @@
 """
-Task 5:
-
-- Unit Test for individual functionality testing.
-    - User Data Cleaning Tests: Tests clean_users_data() function with different forms of test data
-    - Transaction Data Cleaning Tests: Tests clean_transaction_data() function with different forms of test data
-    - ETL Function Tests: Tests form and quality of results of various ETL processes.
-
-Note: Unit Tests not logged.
+Unit tests for the src/settings.py file.
 """
+
 
 import unittest
 import os

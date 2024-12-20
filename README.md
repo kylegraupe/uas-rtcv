@@ -15,16 +15,19 @@ Stay tuned! Newest version solves latency issue and is in near real time! Traile
   <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=30&duration=2000&pause=10000&startDelay=4000&color=0FFFD0&center=false&vCenter=true&width=1000&lines=LEAVE+A+STAR+OR+A+FOLLOW+IF+THIS+REPO+IS+HELPFUL!" alt="Typing SVG" />
 </h1>
 
-
 ---
 
 ## Context 
 
 In various industries and applications, there is a growing need for real-time, high-quality video streaming capabilities. DJI is the market-dominant supplier in consumer and industry drones. Therefore, building an application for real-time Computer Vision, leveraging DJI drones like the Mini 4 Pro, is essential to harness the full potential of these advanced imaging systems. This application provides immediate AI analysis to both consumers and professionals, eliminating the need for more costly alternatives and the necessity of DJI SDK while offering comparable control over the video feed and frames.
 
+---
+
 ## What problem does this solve?
 
 This application enables the use of computer vision on a DJI drone that does **NOT** get access to the DJI SDK. To see a list of the supported SDKs and their associated DJI drones, click [here](https://developer.dji.com/). The drone that I am using for the development of this application is the DJI Mini 4 Pro, the latest release of the <250g class of consumer drones, which is **NOT** supported in the DJI SDK.
+
+---
 
 ## Features
 
@@ -40,6 +43,8 @@ This application enables the use of computer vision on a DJI drone that does **N
   - Python's TkInter is not suitable for high-frame displaying, therefore UI needs to be reworked in a new framework due to multithreading successes.
 - **Custom Stream Buffer**: Custom implementation of Producer-Consumer Threading paradigm to keep stream in near real-time.
   - Resolves the growing latency problem associated with more naive RTMP stream handlers.
+
+--- 
 
 ## SETUP (MacOS Apple Silicon):
 - navigate to **requirements.txt** and install all dependencies.
@@ -62,10 +67,14 @@ This application enables the use of computer vision on a DJI drone that does **N
 - Make sure to download a Local RTMP Server
   - I use this for MacOS: https://github.com/sallar/mac-local-rtmp-server
 
+---
+
 ## DEBUGGING:
  - run: 'ffplay -f flv **_your_rtmp_url_**' to verify if stream is being sent via RTMP Server. 
  - run: 'sudo nano /opt/homebrew/etc/nginx/nginx.conf' to edit nginx.conf file.
    - nginx.conf file controls the functionality of the NGINX Server. There should be a block for the RTMP Server, which will specify the location of the Listening Port (typically 1935).
+
+---
 
 ## EXECUTION:
 - launch: Local RTMP Server application. This will facilitate the connection from the drone.
@@ -81,6 +90,8 @@ This application enables the use of computer vision on a DJI drone that does **N
     - ensure environment and application variables are customized appropriately in **settings.py**
   - testing endpoint: test_executive.py
     - this will run all unit tests and eventually integration tests prior
+
+---
 
 ## REFERENCES
 - Model Training Conducted in Kaggle Jupyter Notebook Environment:

@@ -97,3 +97,9 @@ This application enables the use of computer vision on a DJI drone that does **N
 - Model Training Conducted in Kaggle Jupyter Notebook Environment:
   - https://www.kaggle.com/code/kylegraupe/model-training-dji-real-time-semantic-segmentation
   - Model training also included in repository: 'model_training/model-training-dji-real-time-semantic-seg-v1.ipynb'
+
+---
+
+## ISSUES WITH CURRENT VERSION
+
+- Duplicate logging events due to multiple threads.

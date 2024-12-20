@@ -20,7 +20,7 @@ This application enables the use of computer vision on a DJI drone that does **N
 
 ## Features
 
-- **Real-Time Semantic Segmentation**: Perform live semantic segmentation on drone footage.
+- **Real-Time Semantic Segmentation**: Perform live semantic segmentation on aerial drone footage.
 - **Custom Model Integration**: Integrate custom U-Net models for segmentation tasks.
 - **Post-Processing**: Apply advanced post-processing techniques to improve segmentation accuracy.
   - **Conditional Random Field (CRF)**: A probabilistic graphical model that refines pixel-level classification by considering spatial dependencies.
@@ -30,14 +30,17 @@ This application enables the use of computer vision on a DJI drone that does **N
   - **Gaussian Blur**: Applies a Gaussian function to blur an image, reducing high-frequency details and smoothing edges.
 - **GUI Integration**: A user-friendly graphical interface for controlling and visualizing the segmentation process.
   - Python's TkInter is not suitable for high-frame displaying, therefore UI needs to be reworked in a new framework due to multithreading successes.
-
+- **Custom Stream Buffer**: Custom implementation of Producer-Consumer Threading paradigm to keep stream in near real-time.
+  - Resolves the growing latency problem associated with more naive RTMP stream handlers.
 
 ## SETUP (MacOS Apple Silicon):
+- navigate to **requirements.txt** and install all dependencies.
 - install NGINX with RTMP module: 'brew install nginx-full --with-rtmp'
 - configure NGINX Configuration: 'sudo nano /opt/homebrew/etc/nginx/nginx.conf'
+  - **.. /nginx.conf** file is provided as an example configuration
 - set RTMP URL in settings.py file: 'RTMP_URL = "rtmp://your_ip_address:1935/live"'
   - Uses Port 1935, which is the default port, but can be changed in settings.py file.
-- install OpenCV with FFMPEG Support (in IDE Terminal):
+- install OpenCV with FFMPEG Support (in IDE Terminal) this part can be tricky:
   - run: 'brew install ffmpeg'
   - run: 'brew install cmake git'
   - run: 'git clone https://github.com/opencv/opencv.git'
@@ -48,6 +51,8 @@ This application enables the use of computer vision on a DJI drone that does **N
   - run: 'make -j4'
   - run: 'sudo make install'
   - verify installation with 'print(cv2.getBuildInformation())' and check FFMPEG section.
+- Make sure to download a Local RTMP Server
+  - I use this for MacOS: https://github.com/sallar/mac-local-rtmp-server
 
 ## DEBUGGING:
  - run: 'ffplay -f flv **_your_rtmp_url_**' to verify if stream is being sent via RTMP Server. 
@@ -55,16 +60,19 @@ This application enables the use of computer vision on a DJI drone that does **N
    - nginx.conf file controls the functionality of the NGINX Server. There should be a block for the RTMP Server, which will specify the location of the Listening Port (typically 1935).
 
 ## EXECUTION:
-- open: Local RTMP Server application. This will facilitate the connection from the drone.
+- launch: Local RTMP Server application. This will facilitate the connection from the drone.
 - navigate to transmission tab on DJI RC2. select 'Live Streaming Platforms' and select 'RTMP'.
   - currently working with high FPS and low latency on the following settings:
     - Frequency: 2.4 GHz
     - Channel Mode: Auto
     - Resolution: 720p (only option)
     - Bit Rate: 5 Mbps
+  - Press 'Start Live Stream'
 - Endpoints:
-  - runs without UI: stream_processing_threaded.py
-  - runs deprecated veriion: main.py 
+  - primary endpoint: main.py
+    - ensure environment and application variables are customized appropriately in **settings.py**
+  - testing endpoint: test_executive.py
+    - this will run all unit tests and eventually integration tests prior
 
 ## REFERENCES
 - Model Training Conducted in Kaggle Jupyter Notebook Environment:

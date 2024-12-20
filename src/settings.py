@@ -27,6 +27,7 @@ ENVIRONMENT: str = 'development'
 TRAIN: bool = False
 SHOW_DEBUG_PROFILE: bool = True
 UI_ON: bool = False
+RUN_TESTS_PRIOR_TO_EXECUTION: bool = True
 
 # RTMP/NGINX settings
 LISTENING_PORT: int = 1935

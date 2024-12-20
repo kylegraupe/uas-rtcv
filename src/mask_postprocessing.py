@@ -7,9 +7,7 @@ from PIL import Image
 import pydensecrf.densecrf as dcrf
 from pydensecrf.utils import unary_from_labels
 
-import model_inference
-import settings
-import ui_input_variables
+from src import model_inference, settings, ui_input_variables
 
 
 def ensure_rgb(segmentation_mask: np.array) -> np.array:

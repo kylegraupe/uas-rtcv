@@ -9,9 +9,7 @@ import cProfile
 import cv2
 import os
 
-import settings
-import model_inference
-import mask_postprocessing
+from src import settings, model_inference, mask_postprocessing
 
 is_streaming: bool = True
 BUFFER_QUEUE: queue.Queue = queue.Queue(maxsize=settings.MAX_BUFFER_SIZE)
@@ -59,8 +57,6 @@ def produce_livestream_buffer(url: str) -> None:
     :param url: RTMP URL (in settings.py)
     :return: None
     """
-    profiler = cProfile.Profile()
-    profiler.enable()
 
     process = (
         ffmpeg
@@ -83,10 +79,6 @@ def produce_livestream_buffer(url: str) -> None:
         in_frame = np.frombuffer(in_bytes, np.uint8).reshape([720, 1280, 3]).copy()
         add_to_buffer(in_frame, BUFFER_QUEUE)
 
-        profiler.disable()
-        stats = pstats.Stats(profiler).sort_stats('cumtime')
-        stats.print_stats()
-
 
 def consume_livestream_buffer() -> None:
     """
@@ -95,8 +87,6 @@ def consume_livestream_buffer() -> None:
     """
     time.sleep(2)
 
-    profiler = cProfile.Profile()
-    profiler.enable()
     while is_streaming:
         frame_batch = get_first_n_items_from_queue(BUFFER_QUEUE, 1)
         frame_batch_resized = []
@@ -124,10 +114,6 @@ def consume_livestream_buffer() -> None:
                 output_batch = segmentation_result_batch
         else:
             break
-
-        profiler.disable()
-        stats = pstats.Stats(profiler).sort_stats('cumtime')
-        stats.print_stats()
 
 def save_batch_as_png(image, mask, save_directory, index, prefix='image'):
     """

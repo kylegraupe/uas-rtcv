@@ -49,7 +49,7 @@ class TestSettingsViability(unittest.TestCase):
 
     def test_get_IP_function(self):
         """Test to ensure IP address does not return default IP of 127.0.0.1"""
-        self.assertNotEqual(settings.ip_address, f'127.0.0.1', msg=f'IP Address: {settings.ip_address} has reverted to localhost value.')
+        self.assertNotEqual(settings.IP_ADDRESS, f'127.0.0.1', msg=f'IP Address: {settings.ip_address} has reverted to localhost value.')
 
     def test_pytorch_device(self):
         """Test to ensure that the device used in model training is either the CPU or GPU"""

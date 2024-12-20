@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 
 # Specific Directories
-/assets
+assets/
 
 # C extensions
 *.so

@@ -1,4 +1,6 @@
-"""Use this file to run all tests before executing the application."""
+"""
+Use this file to run all tests before executing the application.
+"""
 
 import unittest
 import os

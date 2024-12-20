@@ -1,13 +1,5 @@
 """
 StreamApp is a class that creates a GUI for a RTMP livestream using tkinter.
-
-The class takes in a root window, a start_stream_callback function, and a stop_stream_callback function.
-
-The start_stream_callback function is called when the start button is pressed. It should start the livestream.
-
-The stop_stream_callback function is called when the stop button is pressed. It should stop the livestream.
-
-The class will create a GUI with buttons to start and stop the stream. It will also create a label to display the video.
 """
 
 import tkinter as tk

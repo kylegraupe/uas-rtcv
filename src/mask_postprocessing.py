@@ -1,6 +1,7 @@
 """
 This module contains functions for applying post-processing operations to segmentation masks.
 """
+
 import cv2
 import numpy as np
 from PIL import Image
@@ -16,7 +17,7 @@ def ensure_rgb(segmentation_mask: np.array) -> np.array:
         return segmentation_mask
     return settings.COLOR_MAP[segmentation_mask.astype(np.uint8)]
 
-def apply_erosion(segmentation_mask):
+def apply_erosion(segmentation_mask: np.array) -> np.array:
     """
     Apply erosion to the segmentation mask to reduce the size of the segmented objects.
 
@@ -30,7 +31,7 @@ def apply_erosion(segmentation_mask):
     eroded_mask = cv2.erode(segmentation_mask_rgb, settings.EROSION_KERNEL, iterations=settings.EROSION_ITERATIONS)
     return eroded_mask.astype(np.uint8)
 
-def apply_dilation(segmentation_mask):
+def apply_dilation(segmentation_mask: np.array) -> np.array:
     """
     Apply dilation to the segmentation mask to increase the size of the segmented objects.
 
@@ -44,7 +45,7 @@ def apply_dilation(segmentation_mask):
     dilated_mask = cv2.dilate(segmentation_mask_rgb, settings.DILATION_KERNEL, iterations=settings.DILATION_ITERATIONS)
     return dilated_mask.astype(np.uint8)
 
-def apply_gaussian_smoothing(segmentation_mask):
+def apply_gaussian_smoothing(segmentation_mask: np.array) -> np.array:
     """
     Applies Gaussian smoothing to a segmentation mask.
 
@@ -57,7 +58,7 @@ def apply_gaussian_smoothing(segmentation_mask):
     segmentation_mask_rgb = ensure_rgb(segmentation_mask)
     return np.array(cv2.GaussianBlur(segmentation_mask_rgb, settings.GAUSSIAN_SMOOTHING_KERNEL_SHAPE, 0)).astype(np.uint8)
 
-def apply_median_filtering(segmentation_mask):
+def apply_median_filtering(segmentation_mask: np.array) -> np.array:
     """
     Applies a median filter to a segmentation mask.
 
@@ -70,7 +71,7 @@ def apply_median_filtering(segmentation_mask):
     segmentation_mask_rgb = ensure_rgb(segmentation_mask)
     return np.array(cv2.medianBlur(segmentation_mask_rgb, settings.MEDIAN_FILTERING_KERNEL_SIZE)).astype(np.uint8)
 
-def apply_crf(original_image, segmentation_mask):
+def apply_crf(original_image: np.array, segmentation_mask: np.array) -> np.array:
     """
     Applies Conditional Random Field (CRF) post-processing to a segmentation mask.
 

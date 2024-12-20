@@ -2,18 +2,17 @@
 Unit tests for the src/settings.py file.
 """
 
-
 import unittest
 import os
 from src import settings
 
-def is_divisible(number, divisor):
+def is_divisible(number: int, divisor: int) -> bool:
         return number % divisor == 0
 
-def device_is_in_list(device):
-    return device in ['cpu','gpu']
+def device_is_in_list(device: str) -> bool:
+    return str(device) in ['cpu','gpu']
 
-def path_exists(path):
+def path_exists(path: str) -> bool:
     return os.path.exists(path)
 
 class TestSettingsViability(unittest.TestCase):

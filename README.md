@@ -8,7 +8,9 @@ To watch a short clip of the application in use, click [here.](https://www.graup
 
 Stay tuned! Newest version solves latency issue and is in near real time! Trailer to come soon!
 
-### ⭐ **IF YOU FIND THE PROJECT INTERESTING, PLEASE LEAVE A STAR! ⭐**
+<h1 align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=25&duration=2000&pause=10000&color=0FFFD0&center=false&vCenter=true&width=1000&lines=LEAVE+A+STAR+OR+A+FOLLOW+IF+THIS+REPO+IS+HELPFUL!" alt="Typing SVG" />
+</h1>
 
 ## Context 
 

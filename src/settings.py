@@ -14,10 +14,8 @@ def get_ip() -> str:
     try:
         s.connect(('10.254.254.254', 1))
         IP = s.getsockname()[0]
-        print(f'IP Address found. Address: {IP}')
     except Exception as e:
         IP = '127.0.0.1' # Default localhost IP
-        print(f'IP Address not found. Reverting to default: {IP}')
     finally:
         s.close()
     return IP
@@ -31,8 +29,8 @@ RUN_TESTS_PRIOR_TO_EXECUTION: bool = True
 
 # RTMP/NGINX settings
 LISTENING_PORT: int = 1935
-ip_address: str = get_ip()
-RTMP_URL: str = f'rtmp://{ip_address}:{LISTENING_PORT}/live/'
+IP_ADDRESS: str = get_ip()
+RTMP_URL: str = f'rtmp://{IP_ADDRESS}:{LISTENING_PORT}/live/'
 
 # Model properties
 MODEL_PATH: str = '../trained_models/Unet-Mobilenet_V3.pt'
@@ -116,7 +114,7 @@ EROSION_ITERATIONS: int = 1
 MEDIAN_FILTERING_ON: bool = False
 MEDIAN_FILTERING_KERNEL_SIZE: int = 11
 
-# GAUSSIAN_SMOOTHING_ON = False
+GAUSSIAN_SMOOTHING_ON = False
 GAUSSIAN_SMOOTHING_KERNEL_SHAPE: tuple = (5, 5)
 
 CRF_ON: bool = False

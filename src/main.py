@@ -8,6 +8,7 @@ import pstats
 import tkinter as tk
 
 import settings
+import logs
 import stream_processing
 import user_interface
 import stream_processing_threaded
@@ -15,19 +16,13 @@ from tests import test_executive
 
 
 def execute_application() -> None:
-    print(f'Application started at time {time.ctime()}')
-    print(f'\tEnvironment: {settings.ENVIRONMENT}')
-    print(f'\tRTMP URL: {settings.RTMP_URL}')
-    print(f'\tIP Address: {settings.ip_address}')
-    print(f'\tListening Port: {settings.LISTENING_PORT}')
-
     if settings.UI_ON:
         root = tk.Tk()
         app = user_interface.StreamApp(root,
                                        lambda: stream_processing.livestream_executive_ui(settings.RTMP_URL, app),
                                        lambda: app.stop_stream())
         root.mainloop()
-        
+
     if settings.RUN_TESTS_PRIOR_TO_EXECUTION:
         test_executive.execute_all_unit_tests()
     if settings.THREADED_IMPLEMENTATION:
@@ -35,6 +30,30 @@ def execute_application() -> None:
 
 
 if __name__ == "__main__":
+    logs.log_event(f'Application started at time: {time.ctime()}\n'
+                   f'\n'
+                   f'\tApplication Environment Variables: \n'
+                   f'\t\tEnvironment: {settings.ENVIRONMENT}\n'
+                   f'\t\tRTMP URL: {settings.RTMP_URL}\n'
+                   f'\t\tIP Address: {settings.IP_ADDRESS}\n'
+                   f'\t\tListening Port: {settings.LISTENING_PORT}\n'
+                   f'\t\tUI On: {settings.UI_ON}\n'
+                   f'\t\tRun Tests Before Application Execution: {settings.RUN_TESTS_PRIOR_TO_EXECUTION}\n'
+                   f'\t\tThreaded Implementation: {settings.THREADED_IMPLEMENTATION}\n'
+                   f'\n'
+                   f'\tStream Properties:\n'
+                   f'\t\tInput Frames per Second: {settings.INPUT_FPS}\n'
+                   f'\t\tOutput Frames per Second: {settings.OUTPUT_FPS}\n'
+                   f'\t\tMax Buffer Size: {settings.MAX_BUFFER_SIZE}\n'
+                   f'\n'
+                   f'\tMask Postprocessing:\n'
+                   f'\t\tDilation On: {settings.DILATION_ON}\n'
+                   f'\t\tErosion On: {settings.EROSION_ON}\n'
+                   f'\t\tMedian Filtering On: {settings.MEDIAN_FILTERING_ON}\n'
+                   f'\t\tGaussian Smoothing On: {settings.GAUSSIAN_SMOOTHING_ON}\n'
+                   f'\t\tConditional Random Field On: {settings.CRF_ON}'
+                   f'\n'
+                   )
 
     if settings.SHOW_DEBUG_PROFILE:
         profiler = cProfile.Profile()

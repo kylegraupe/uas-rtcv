@@ -1,4 +1,7 @@
-# Real-Time Semantic Segmentation on DJI Drone via RTMP Server
+<h1 align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=30&duration=2000&pause=10000&color=0FFFD0&center=false&vCenter=true&width=1000&lines=Real-Time Semantic Segmentation on DJI Drone via RTMP
+" alt="Typing SVG" />
+</h1>
 
 This application takes a video stream from a DJI drone via RTMP Server and performs image processing and semantic segmentation on the video stream.
 
@@ -8,9 +11,12 @@ To watch a short clip of the application in use, click [here.](https://www.graup
 
 Stay tuned! Newest version solves latency issue and is in near real time! Trailer to come soon!
 
+---
 <h1 align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=25&duration=2000&pause=10000&color=0FFFD0&center=false&vCenter=true&width=1000&lines=LEAVE+A+STAR+OR+A+FOLLOW+IF+THIS+REPO+IS+HELPFUL!" alt="Typing SVG" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=30&duration=2000&pause=10000&color=0FFFD0&center=false&vCenter=true&width=1000&lines=LEAVE+A+STAR+OR+A+FOLLOW+IF+THIS+REPO+IS+HELPFUL!" alt="Typing SVG" />
 </h1>
+
+---
 
 ## Context 
 

@@ -4,10 +4,10 @@ Use this file to run all tests before executing the application.
 
 import unittest
 
-from src import logs
+from src import custom_logging
 
 def execute_all_unit_tests() -> None:
-    logs.log_event(f'Running all unit tests.')
+    custom_logging.log_event(f'Running all unit tests.')
     settings_unit_tests = unittest.defaultTestLoader.loadTestsFromName('tests.settings_unit_tests')
     unittest.TextTestRunner(verbosity=1).run(settings_unit_tests)
 

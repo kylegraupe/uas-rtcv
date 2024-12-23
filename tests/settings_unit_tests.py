@@ -5,7 +5,7 @@ Unit tests for the src/settings.py file.
 import unittest
 import os
 
-from src import settings, logs
+from src import settings, custom_logging
 
 def is_divisible(number: int, divisor: int) -> bool:
         return number % divisor == 0
@@ -28,12 +28,12 @@ class TestSettingsViability(unittest.TestCase):
 
     def setUp(self):
         """Set up test preconditions and log the start of each test."""
-        logs.log_event(f"Starting test: {self._testMethodName}", logger_type='tests')
+        custom_logging.log_event(f"Starting test: {self._testMethodName}", logger_type='tests')
         # print(f"Test: {self._testMethodName} running on thread:", threading.current_thread().name)
 
     def tearDown(self):
         """Log the completion of each test."""
-        logs.log_event(f"Test completed: {self._testMethodName}", logger_type='tests')
+        custom_logging.log_event(f"Test completed: {self._testMethodName}", logger_type='tests')
         # print(f"Test: {self._testMethodName} running on thread:", threading.current_thread().name)
 
 

@@ -9,7 +9,7 @@ import tkinter as tk
 import threading
 
 import settings
-import logs
+import custom_logging
 import stream_processing
 import user_interface
 import stream_processing_threaded
@@ -30,7 +30,7 @@ def execute_application() -> None:
 
 
 if __name__ == "__main__":
-    logs.log_event(f'Application started at time: {time.ctime()}\n'
+    custom_logging.log_event(f'Application started at time: {time.ctime()}\n'
                    f'\n'
                    f'\tApplication Environment Variables: \n'
                    f'\t\tEnvironment: {settings.ENVIRONMENT}\n'
@@ -52,8 +52,8 @@ if __name__ == "__main__":
                    f'\t\tMedian Filtering On: {settings.MEDIAN_FILTERING_ON}\n'
                    f'\t\tGaussian Smoothing On: {settings.GAUSSIAN_SMOOTHING_ON}\n'
                    f'\t\tConditional Random Field On: {settings.CRF_ON}'
-                   f'\n'
-                   )
+                   f'\n')
+
     print("Function running on thread:", threading.current_thread().name)
 
     # if settings.SHOW_DEBUG_PROFILE:

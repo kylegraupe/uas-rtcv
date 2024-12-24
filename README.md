@@ -8,7 +8,7 @@ This tool integrates the use of FFMPEG, RTMP Servers, and PyTorch for real time 
 
 ## 🎬 Application Trailer ⚠️
 
-To watch a short clip of the application in use, click [here.](https://www.graupe.io/portfolio/real-time-computer-vision-streamed-via-dji-drone) on graupe.io!
+To watch a short clip of the application in use, click [here](https://www.graupe.io/portfolio/real-time-computer-vision-streamed-via-dji-drone) on [graupe.io](https://www.graupe.io)!
 
 Stay tuned! Newest version solves latency issue and is in near real time! Trailer to come soon!
 

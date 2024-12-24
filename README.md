@@ -2,7 +2,9 @@
   <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=30&duration=2000&pause=10000&color=0FFFD0&center=false&vCenter=true&width=1000&lines=Unmanned+Aerial+System+-+Real Time+Computer+Vision" alt="Typing SVG" />
 </h1>
 
-This application takes a video stream from a DJI drone via RTMP Server and performs image processing and semantic segmentation on the video stream.
+⭐ **Please leave a star!**
+
+This tool integrates the use of FFMPEG, RTMP Servers, and PyTorch for real time computer vision via an Unmanned Aerial Systems (Drones), and is the only open-source project of the sort. 
 
 ## 🎬 Application Trailer ⚠️
 

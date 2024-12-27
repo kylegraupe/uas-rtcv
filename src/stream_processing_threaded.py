@@ -62,12 +62,21 @@ def produce_livestream_buffer(url: str) -> None:
     :return: None
     """
 
+    # process = (
+    #     ffmpeg
+    #     .input(url, an=None)
+    #     .output('pipe:', format='rawvideo', pix_fmt='bgr24', r=f'{settings.INPUT_FPS}')
+    #     .global_args('-c:v', 'libx264', '-bufsize', '2M')
+    #     .run_async(pipe_stdout=True, pipe_stderr=True)
+    # )
+
     process = (
         ffmpeg
-        .input(url, an=None)
+        .input(url, an=None)  # Disable audio
         .output('pipe:', format='rawvideo', pix_fmt='bgr24', r=f'{settings.INPUT_FPS}')
-        .global_args('-c:v', 'libx264', '-bufsize', '2M')
-        .run_async(pipe_stdout=True, pipe_stderr=True)
+        .global_args('-c:v', 'libx264', '-rtbufsize', '100k')
+        .global_args('-preset', 'ultrafast', '-threads', '4')
+        .run_async(pipe_stdout=settings.PIPE_STDOUT, pipe_stderr=settings.PIPE_STDERR)
     )
 
     while is_streaming:

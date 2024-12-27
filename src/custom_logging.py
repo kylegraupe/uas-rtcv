@@ -31,14 +31,12 @@ def setup_logger(name: str, log_file: str) -> logging.Logger:
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
 
-    # File handler for logging to file
     file_handler = logging.FileHandler(log_file)
     file_handler.setLevel(logging.DEBUG)
     file_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
     file_handler.setFormatter(file_formatter)
     logger.addHandler(file_handler)
 
-    # Console handler for logging to the console
     console_handler = logging.StreamHandler()
     console_handler.setLevel(logging.INFO)
     console_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")

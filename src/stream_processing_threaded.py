@@ -189,8 +189,6 @@ def display_video() -> None:
                 cv2.imshow("Frame", combined_img)
                 frame_counter += 1
 
-
-
         if cv2.waitKey(1) & 0xFF == ord('q'):
             is_streaming = False
             break
@@ -220,8 +218,3 @@ def stream_processing_threaded_executive() -> None:
 
 if __name__ == "__main__":
     stream_processing_threaded_executive()
-
-
-    # producer_thread.join()
-    # consumer_thread.join()
-    # cv2.destroyAllWindows()

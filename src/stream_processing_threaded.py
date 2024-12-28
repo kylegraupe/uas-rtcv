@@ -12,8 +12,9 @@ import pstats
 import cProfile
 import cv2
 import os
+import datetime
 
-from src import settings, model_inference, mask_postprocessing
+from src import settings, model_inference, mask_postprocessing, custom_logging
 
 is_streaming: bool = True
 BUFFER_QUEUE: queue.Queue = queue.Queue(maxsize=settings.MAX_BUFFER_SIZE)
@@ -70,11 +71,12 @@ def produce_livestream_buffer(url: str) -> None:
     #     .run_async(pipe_stdout=True, pipe_stderr=True)
     # )
 
+
     process = (
         ffmpeg
         .input(url, an=None)  # Disable audio
         .output('pipe:', format='rawvideo', pix_fmt='bgr24', r=f'{settings.INPUT_FPS}')
-        .global_args('-c:v', 'libx264', '-rtbufsize', '100k')
+        .global_args('-c:v', 'libfdk_aac', '-rtbufsize', '10k')
         .global_args('-preset', 'ultrafast', '-threads', '4')
         .run_async(pipe_stdout=settings.PIPE_STDOUT, pipe_stderr=settings.PIPE_STDERR)
     )
@@ -157,8 +159,13 @@ def display_video() -> None:
     :return: None
     """
     global is_streaming
+    start_time = datetime.datetime.now()
+    frame_counter = 0
+
     while is_streaming:
+
         if not DISPLAY_QUEUE.empty():
+
             display_queue_size = DISPLAY_QUEUE.qsize()
             og_img, mask = DISPLAY_QUEUE.get()
             np_og_img = np.array(og_img)
@@ -180,10 +187,26 @@ def display_video() -> None:
                 combined_img = np.vstack((og_img, settings.COLOR_MAP[mask_img]))
 
                 cv2.imshow("Frame", combined_img)
+                frame_counter += 1
+
+
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             is_streaming = False
             break
+
+    end_time = datetime.datetime.now()
+    total_stream_time_seconds = (end_time - start_time).total_seconds()
+    recorded_fps = frame_counter / total_stream_time_seconds
+    data_dict = {'recorded_fps':recorded_fps,
+                 'recorded_frames':frame_counter,
+                 'total_stream_time':total_stream_time_seconds}
+
+    custom_logging.log_event(f'Total Stream Time: {total_stream_time_seconds} seconds')
+    custom_logging.log_event(f'Total Frames: {frame_counter}')
+    custom_logging.log_event(f'Recorded FPS: {recorded_fps}')
+
+    custom_logging.append_to_log_data(data_dict, 'stream_characteristics.csv')
 
 
 def stream_processing_threaded_executive() -> None:

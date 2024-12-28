@@ -108,6 +108,7 @@ This application enables the use of computer vision on a DJI drone that does **N
 
 ---
 
-## ISSUES WITH CURRENT VERSION
+[//]: # (## ISSUES WITH CURRENT VERSION)
 
-- Duplicate logging events due to multiple threads.
+[//]: # ()
+[//]: # (- Duplicate logs created. )

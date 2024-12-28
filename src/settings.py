@@ -26,11 +26,9 @@ TRAIN: bool = False
 SHOW_DEBUG_PROFILE: bool = True
 
 # Primary Settings
-NONTHREADED_UI_ON: bool = True
-THREADED_IMPLEMENTATION: bool = False
+NONTHREADED_UI_ON: bool = False
+THREADED_IMPLEMENTATION: bool = True
 RUN_TESTS_PRIOR_TO_EXECUTION: bool = False # FIXME: Keep false for now. Running into circular imports.
-
-
 
 # RTMP/NGINX settings
 LISTENING_PORT: int = 1935

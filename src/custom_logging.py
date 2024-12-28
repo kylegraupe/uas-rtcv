@@ -48,21 +48,23 @@ def setup_logger(name: str, log_file: str) -> logging.Logger:
 app_logger = setup_logger("application", APP_LOG_FILE)
 test_logger = setup_logger("tests", TEST_LOG_FILE)
 
-def append_to_log_data(data):
+def append_to_log_data(data, data_log_file_name=f'log_data.csv'):
     """
     Append structured log data to a CSV file using pandas.
 
     Args:
         data (dict): A dictionary where keys are column names, and values are data to append.
+        :param data_log_file_name:
     """
+    data_log_file = os.path.join(LOG_DIR, data_log_file_name)
     df = pd.DataFrame([data])
 
-    if os.path.exists(DATA_LOG_FILE):
-        existing_df = pd.read_csv(DATA_LOG_FILE)
+    if os.path.exists(data_log_file):
+        existing_df = pd.read_csv(data_log_file)
         combined_df = pd.concat([existing_df, df], ignore_index=True)
-        combined_df.to_csv(DATA_LOG_FILE, index=False)
+        combined_df.to_csv(data_log_file, index=False)
     else:
-        df.to_csv(DATA_LOG_FILE, index=False)
+        df.to_csv(data_log_file, index=False)
 
 def log_event(event_message, logger_type="application"):
     """

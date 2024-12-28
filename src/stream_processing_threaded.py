@@ -203,7 +203,7 @@ def display_video() -> None:
     custom_logging.log_event(f'Total Frames: {frame_counter}')
     custom_logging.log_event(f'Recorded FPS: {recorded_fps}')
 
-    custom_logging.append_to_log_data(data_dict, 'stream_characteristics.csv')
+    custom_logging.append_to_log_data(data_dict, 'recorded_stream_data.csv')
 
 
 def stream_processing_threaded_executive() -> None:

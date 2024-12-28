@@ -66,6 +66,9 @@ COLOR_MAP: np.array = np.array([
     [128, 64, 128],   # Class 21: medium purple
     [0, 192, 128],    # Class 22: aquamarine
 ], dtype=np.uint8)
+INVERTED_COLOR_MAP = {tuple(color): label for label, color in enumerate(COLOR_MAP)}
+
+
 NUM_CHANNELS: int = 3 # RGB
 BATCH_SIZE: int = 5
 NUM_CLASSES: int = 23
@@ -105,19 +108,19 @@ FOV: float = 82.1
 SIDE_BY_SIDE: bool = True # Display both original and segmented frames side-by-side
 
 # Postprocessing properties
-DILATION_ON: bool = False
-DILATION_KERNEL: np.array = np.ones((5, 5), np.uint8)
-DILATION_ITERATIONS: int = 1
+DILATION_ON: bool = True
+DILATION_KERNEL: np.array = np.ones((3, 3), np.uint8)
+DILATION_ITERATIONS: int = 5
 
-EROSION_ON: bool = False
-EROSION_KERNEL: np.array = np.ones((5, 5), np.uint8)
-EROSION_ITERATIONS: int = 1
+EROSION_ON: bool = True
+EROSION_KERNEL: np.array = np.ones((3, 3), np.uint8)
+EROSION_ITERATIONS: int = 5
 
-MEDIAN_FILTERING_ON: bool = False
-MEDIAN_FILTERING_KERNEL_SIZE: int = 11
+MEDIAN_FILTERING_ON: bool = True
+MEDIAN_FILTERING_KERNEL_SIZE: int = 15
 
-GAUSSIAN_SMOOTHING_ON = False
-GAUSSIAN_SMOOTHING_KERNEL_SHAPE: tuple = (5, 5)
+GAUSSIAN_SMOOTHING_ON = True
+GAUSSIAN_SMOOTHING_KERNEL_SHAPE: tuple = (3, 3)
 
 CRF_ON: bool = False
 

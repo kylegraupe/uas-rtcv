@@ -13,8 +13,8 @@ import cProfile
 import cv2
 import os
 import datetime
-
-from src import settings, model_inference, mask_postprocessing, custom_logging
+import settings
+from src import model_inference, mask_postprocessing, custom_logging
 
 is_streaming: bool = True
 BUFFER_QUEUE: queue.Queue = queue.Queue(maxsize=settings.MAX_BUFFER_SIZE)
@@ -63,15 +63,6 @@ def produce_livestream_buffer(url: str) -> None:
     :return: None
     """
 
-    # process = (
-    #     ffmpeg
-    #     .input(url, an=None)
-    #     .output('pipe:', format='rawvideo', pix_fmt='bgr24', r=f'{settings.INPUT_FPS}')
-    #     .global_args('-c:v', 'libx264', '-bufsize', '2M')
-    #     .run_async(pipe_stdout=True, pipe_stderr=True)
-    # )
-
-
     process = (
         ffmpeg
         .input(url, an=None)  # Disable audio
@@ -112,17 +103,18 @@ def consume_livestream_buffer() -> None:
                 frame_img = Image.fromarray(frame)
                 frame_batch_resized.append(frame_img)
 
-            segmentation_result_batch = model_inference.images_to_tensor(
+            segmentation_result_batch = model_inference.generate_segmentation_labels_np(
                 frame_batch_resized,
                 settings.MODEL,
                 settings.DEVICE
             ).astype(np.uint8)
 
-            # _, segmentation_results = mask_postprocessing.apply_mask_postprocessing(buffer_frame_resized,
-            #                                                                         segmentation_results_rgb)
+            _, segmentation_result_batch_processed = mask_postprocessing.apply_mask_postprocessing(frame_batch_resized,
+
+                                                                                 segmentation_result_batch)
 
             if settings.SIDE_BY_SIDE:
-                batch_tuple = (frame_batch_resized, segmentation_result_batch)
+                batch_tuple = (frame_batch_resized, segmentation_result_batch_processed)
 
                 DISPLAY_QUEUE.put(batch_tuple)
             else:
@@ -170,11 +162,10 @@ def display_video() -> None:
             og_img, mask = DISPLAY_QUEUE.get()
             np_og_img = np.array(og_img)
             np_mask = np.array(mask)
-
             if mask is None:
                 break
 
-            num_images, height, width = np_mask.shape
+            num_images, height, width, num_channels = np_mask.shape
             masks = [np_mask[i] for i in range(num_images)]
 
             for i in range(display_queue_size):
@@ -184,7 +175,7 @@ def display_video() -> None:
 
                 og_img = np_og_img[i]
                 mask_img = masks[i]
-                combined_img = np.vstack((og_img, settings.COLOR_MAP[mask_img]))
+                combined_img = np.vstack((og_img, mask_img))
 
                 cv2.imshow("Frame", combined_img)
                 frame_counter += 1
@@ -198,7 +189,15 @@ def display_video() -> None:
     recorded_fps = frame_counter / total_stream_time_seconds
     data_dict = {'recorded_fps':recorded_fps,
                  'recorded_frames':frame_counter,
-                 'total_stream_time':total_stream_time_seconds}
+                 'total_stream_time':total_stream_time_seconds,
+                 'input_fps':settings.INPUT_FPS,
+                 'output_fps':settings.OUTPUT_FPS,
+                 'ffmpeg_num_threads':settings.NUM_THREADS,
+                 'custom_buffer_max_buffer_size':settings.MAX_BUFFER_SIZE,
+                 'dilation_on':settings.DILATION_ON,
+                 'erosion_on':settings.EROSION_ON,
+                 'median_filtering_on':settings.MEDIAN_FILTERING_ON,
+                 'gaussian_smoothing_on':settings.GAUSSIAN_SMOOTHING_ON}
 
     custom_logging.log_event(f'Total Stream Time: {total_stream_time_seconds} seconds')
     custom_logging.log_event(f'Total Frames: {frame_counter}')

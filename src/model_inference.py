@@ -66,7 +66,7 @@ def image_to_tensor(img: Image, trained_model, device: str) -> np.array:
 
     return output_labels_np
 
-def images_to_tensor(images: np.array, trained_model, device: str) -> np.array:
+def generate_segmentation_labels_np(images: np.array, trained_model, device: str) -> np.array:
     """
     Converts a batch of input images to tensors and makes predictions using a trained model.
 

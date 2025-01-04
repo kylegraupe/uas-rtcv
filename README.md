@@ -4,7 +4,7 @@
 
 ⭐ **Please leave a star!**
 
-This tool integrates the use of FFMPEG, RTMP Servers, and PyTorch for real time computer vision via an Unmanned Aerial Systems (Drones), and is the only open-source project of the sort. 
+This tool integrates the use of FFMPEG, RTMP Servers, and PyTorch for real time computer vision via an Unmanned Aerial Systems (i.e. DJI Drones), and is the only open-source project of the sort. 
 
 ## 🎬 Application Trailer ⚠️
 

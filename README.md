@@ -33,6 +33,27 @@ This application enables the use of computer vision on a DJI drone that does **N
 
 ---
 
+## DJI Drones with RTMP Stream Feature
+- Mavic Mini
+- DJI Air 3
+- DJI Mavic 3 Pro
+- DJI Mini2 SE
+- DJI Mini 3
+- DJI Mavic 3 Classic
+- DJI Avata
+- DJI Mini 3 Pro
+- DJI Mini Pro 4
+- DJI Mavic 3
+- DJI Air 2S
+- DJI FPV
+- DJI Mini SE
+- DJI Mini 2
+- Mavic Air 2
+
+This repository provides computer vision support for each of these above commercially available recreation drones!
+
+---
+
 ## Features
 
 - **Real-Time Semantic Segmentation**: Perform live semantic segmentation on aerial drone footage.
@@ -107,8 +128,3 @@ This application enables the use of computer vision on a DJI drone that does **N
   - Model training also included in repository: 'model_training/model-training-dji-real-time-semantic-seg-v1.ipynb'
 
 ---
-
-[//]: # (## ISSUES WITH CURRENT VERSION)
-
-[//]: # ()
-[//]: # (- Duplicate logs created. )

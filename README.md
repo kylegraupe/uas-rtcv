@@ -50,7 +50,7 @@ This application enables the use of computer vision on a DJI drone that does **N
 - DJI Mini 2
 - Mavic Air 2
 
-This repository provides computer vision support for each of these above commercially available recreation drones!
+This repository provides computer vision support for each of these above commercially available recreational drones! I personally conducted all of my testing on the DJI Mini 4 Pro.
 
 ---
 

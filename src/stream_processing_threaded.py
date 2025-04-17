@@ -15,7 +15,6 @@ import os
 import datetime
 import settings
 from src import model_inference, mask_postprocessing, custom_logging
-from src.settings import INPUT_FPS
 
 ffmpeg_process = None
 is_streaming: bool = True
@@ -43,7 +42,6 @@ def get_first_n_items_from_queue(queue_param: queue.Queue, n: int) -> list:
             break
     return items
 
-
 def add_to_buffer(frame: np.array, buffer_queue: queue.Queue) -> None:
     """
     Adds frame to buffer. Does not exceed buffer size to keep stream in near real-time.
@@ -55,46 +53,6 @@ def add_to_buffer(frame: np.array, buffer_queue: queue.Queue) -> None:
     if buffer_queue.full():
         buffer_queue.get()
     buffer_queue.put(frame)
-
-
-# def produce_livestream_buffer(url: str) -> None:
-#     """
-#     Produces livestream buffer using FFMPEG and custom buffer in Producer-Consumer Threading Paradigm.
-#
-#     :param url: RTMP URL (in settings.py)
-#     :return: None
-#     """
-#     #
-#     process = (
-#         ffmpeg
-#         .input(url, an=None)  # Disable audio
-#         .output('pipe:', format='rawvideo', pix_fmt='bgr24', r=f'{settings.INPUT_FPS}')
-#         .global_args('-c:v', 'libfdk_aac', '-rtbufsize', '10k')
-#         .global_args('-preset', 'ultrafast', '-threads', '4')
-#         .run_async(pipe_stdout=settings.PIPE_STDOUT, pipe_stderr=settings.PIPE_STDERR)
-#     )
-#
-#     # process = (
-#     #     ffmpeg
-#     #     .input(url, an=None)
-#     #     .output('pipe:', format='rawvideo', pix_fmt=settings.PIX_FORMAT, r=f'{settings.INPUT_FPS}')
-#     #     .global_args('-c:v', settings.CODEC, '-rtbufsize', settings.BUFSIZE)
-#     #     .global_args('-preset', settings.PRESET, '-threads', f'{settings.NUM_THREADS}')
-#     #     .run_async(pipe_stdout=True, pipe_stderr=True)
-#     # )
-#
-#     while is_streaming:
-#         in_bytes = process.stdout.read(settings.FRAME_SIZE)
-#         if len(in_bytes) != settings.FRAME_SIZE:
-#             if not in_bytes:
-#                 print("End of stream or error reading frame")
-#                 break
-#             else:
-#                 print("Error: Read incomplete frame")
-#                 break
-#
-#         in_frame = np.frombuffer(in_bytes, np.uint8).reshape([720, 1280, 3]).copy()
-#         add_to_buffer(in_frame, BUFFER_QUEUE)
 
 def produce_livestream_buffer(url: str) -> None:
     """
@@ -131,7 +89,6 @@ def produce_livestream_buffer(url: str) -> None:
                 ffmpeg_process.wait(timeout=2)
             except:
                 ffmpeg_process.kill()
-
 
 def consume_livestream_buffer() -> None:
     """
@@ -262,7 +219,6 @@ def display_video() -> None:
     custom_logging.log_event(f'Total Frames: {frame_counter}')
     custom_logging.log_event(f'Recorded FPS: {recorded_fps}')
     custom_logging.append_to_log_data(data_dict, 'recorded_stream_data.csv')
-
 
 def stream_processing_threaded_executive() -> None:
     producer_thread = threading.Thread(target=produce_livestream_buffer, args=(settings.RTMP_URL,))

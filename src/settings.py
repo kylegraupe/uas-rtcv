@@ -72,19 +72,14 @@ NUM_CHANNELS: int = 3 # RGB
 BATCH_SIZE: int = 5
 NUM_CLASSES: int = 23
 
-# Test 18 | codec='libx264' preset='ultrafast' bufsize='500k' thread='2' fps='30' pix_fmt='bgr24' | Achieved FPS: 39.69
+# Stream properties
 CODEC: str = 'libx264'
 PRESET: str = 'ultrafast'
 BUFSIZE: str = '500k'
+PIX_FORMAT: str = 'bgr24'
 NUM_THREADS: int = 4
 INPUT_FPS: int = 30
-PIX_FORMAT: str = 'bgr24'
-
-
-# Stream properties
-# INPUT_FPS: float = 10 # Keep low when model is on, high when model is off. Too high will cause ffmpeg buffer to fill up.
 OUTPUT_FPS: float = 0.1
-# NUM_THREADS: int = 4
 MAX_BUFFER_SIZE: int = 5
 PIPE_STDOUT: bool = True
 PIPE_STDERR: bool = True

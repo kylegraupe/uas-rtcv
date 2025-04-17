@@ -135,22 +135,4 @@ def apply_mask_postprocessing(raw: np.array, segmentation_mask: np.array) -> tup
     # if ui_input_variables.CRF_ON:
     #     mask = apply_crf(raw, segmentation_mask)
 
-    # Remove the batch dimension (1,) from the input array
-    # rgb_array = mask_rgb[0]
-    #
-    # # Initialize the output array to store the class labels
-    # label_array = np.zeros((rgb_array.shape[0], rgb_array.shape[1]), dtype=np.int32)
-    #
-    # for i in range(rgb_array.shape[0]):
-    #     for j in range(rgb_array.shape[1]):
-    #         # Get the RGB color of the pixel at position (i, j)
-    #         rgb_tuple = tuple(rgb_array[i, j])
-    #
-    #         # Look up the label for this RGB value
-    #         if rgb_tuple in settings.INVERTED_COLOR_MAP:
-    #             label_array[i, j] = settings.INVERTED_COLOR_MAP[rgb_tuple]
-    #         else:
-    #             # In case the color is not found in the map (optional: can set to a default label)
-    #             label_array[i, j] = -1  # or some other default value to indicate an unmapped color
-
     return raw, mask_rgb

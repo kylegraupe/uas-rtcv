@@ -68,15 +68,23 @@ COLOR_MAP: np.array = np.array([
 ], dtype=np.uint8)
 INVERTED_COLOR_MAP = {tuple(color): label for label, color in enumerate(COLOR_MAP)}
 
-
 NUM_CHANNELS: int = 3 # RGB
 BATCH_SIZE: int = 5
 NUM_CLASSES: int = 23
 
-# Stream properties
-INPUT_FPS: float = 10 # Keep low when model is on, high when model is off. Too high will cause ffmpeg buffer to fill up.
-OUTPUT_FPS: float = 0.1
+# Test 18 | codec='libx264' preset='ultrafast' bufsize='500k' thread='2' fps='30' pix_fmt='bgr24' | Achieved FPS: 39.69
+CODEC: str = 'libx264'
+PRESET: str = 'ultrafast'
+BUFSIZE: str = '500k'
 NUM_THREADS: int = 4
+INPUT_FPS: int = 30
+PIX_FORMAT: str = 'bgr24'
+
+
+# Stream properties
+# INPUT_FPS: float = 10 # Keep low when model is on, high when model is off. Too high will cause ffmpeg buffer to fill up.
+OUTPUT_FPS: float = 0.1
+# NUM_THREADS: int = 4
 MAX_BUFFER_SIZE: int = 5
 PIPE_STDOUT: bool = True
 PIPE_STDERR: bool = True
@@ -108,18 +116,18 @@ FOV: float = 82.1
 SIDE_BY_SIDE: bool = True # Display both original and segmented frames side-by-side
 
 # Postprocessing properties
-DILATION_ON: bool = True
+DILATION_ON: bool = False
 DILATION_KERNEL: np.array = np.ones((3, 3), np.uint8)
 DILATION_ITERATIONS: int = 5
 
-EROSION_ON: bool = True
+EROSION_ON: bool = False
 EROSION_KERNEL: np.array = np.ones((3, 3), np.uint8)
 EROSION_ITERATIONS: int = 5
 
-MEDIAN_FILTERING_ON: bool = True
+MEDIAN_FILTERING_ON: bool = False
 MEDIAN_FILTERING_KERNEL_SIZE: int = 15
 
-GAUSSIAN_SMOOTHING_ON = True
+GAUSSIAN_SMOOTHING_ON = False
 GAUSSIAN_SMOOTHING_KERNEL_SHAPE: tuple = (3, 3)
 
 CRF_ON: bool = False

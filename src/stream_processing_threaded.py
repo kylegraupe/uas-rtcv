@@ -15,6 +15,7 @@ import os
 import datetime
 import settings
 from src import model_inference, mask_postprocessing, custom_logging
+from src.settings import INPUT_FPS
 
 is_streaming: bool = True
 BUFFER_QUEUE: queue.Queue = queue.Queue(maxsize=settings.MAX_BUFFER_SIZE)
@@ -62,7 +63,7 @@ def produce_livestream_buffer(url: str) -> None:
     :param url: RTMP URL (in settings.py)
     :return: None
     """
-
+    #
     process = (
         ffmpeg
         .input(url, an=None)  # Disable audio
@@ -71,6 +72,15 @@ def produce_livestream_buffer(url: str) -> None:
         .global_args('-preset', 'ultrafast', '-threads', '4')
         .run_async(pipe_stdout=settings.PIPE_STDOUT, pipe_stderr=settings.PIPE_STDERR)
     )
+
+    # process = (
+    #     ffmpeg
+    #     .input(url, an=None)
+    #     .output('pipe:', format='rawvideo', pix_fmt=settings.PIX_FORMAT, r=settings.INPUT_FPS)
+    #     .global_args('-c:v', settings.CODEC, '-rtbufsize', settings.BUFSIZE)
+    #     .global_args('-preset', settings.PRESET, '-threads', settings.NUM_THREADS)
+    #     .run_async(pipe_stdout=True, pipe_stderr=True)
+    # )
 
     while is_streaming:
         in_bytes = process.stdout.read(settings.FRAME_SIZE)
@@ -183,6 +193,8 @@ def display_video() -> None:
         if cv2.waitKey(1) & 0xFF == ord('q'):
             is_streaming = False
             break
+
+    # 92
 
     end_time = datetime.datetime.now()
     total_stream_time_seconds = (end_time - start_time).total_seconds()

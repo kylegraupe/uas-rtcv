@@ -19,4 +19,8 @@ recorded_fps,recorded_frames,total_stream_time,input_fps,output_fps,ffmpeg_num_t
 0.4023919249061555,6,14.910836,10.0,0.1,4.0,5.0,True,True,True,True
 0.3456044513853338,4,11.573925,10.0,0.1,4.0,5.0,True,True,True,True
 0.5048799918078767,34,67.342736,10.0,0.1,4.0,5.0,True,True,True,True
-0.39279329791385237,7,17.821078,10.0,0.1,4.0,5.0,True,True,True,True
+0.3927932979138523,7,17.821078,10.0,0.1,4.0,5.0,True,True,True,True
+0.410246917773882,5,12.187782,10.0,0.1,4.0,5.0,True,True,True,True
+0.8980849595556418,10,11.134804,10.0,0.1,4.0,5.0,True,True,True,True
+1.0912313644245826,38,34.823046,30.0,0.1,4.0,5.0,True,True,True,True
+1.0802122984438622,40,37.029758,30.0,0.1,4.0,5.0,False,False,False,False

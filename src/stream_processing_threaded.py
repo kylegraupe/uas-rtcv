@@ -104,14 +104,6 @@ def produce_livestream_buffer(url: str) -> None:
     """
     global ffmpeg_process
 
-    # ffmpeg_process = (
-    #     ffmpeg
-    #     .input(url, an=None)  # Disable audio
-    #     .output('pipe:', format='rawvideo', pix_fmt='bgr24', r=f'{settings.INPUT_FPS}')
-    #     .global_args('-preset', 'ultrafast', '-threads', '4')
-    #     .run_async(pipe_stdout=settings.PIPE_STDOUT, pipe_stderr=settings.PIPE_STDERR)
-    # )
-
     ffmpeg_process = (
         ffmpeg
         .input(url, an=None)  # Disable audio
@@ -198,7 +190,6 @@ def save_batch_as_png(image, mask, save_directory, index, prefix='image'):
 
         print(f'Saved {image_filename} and {mask_filename}')
 
-
 def display_video() -> None:
     """
     Displays live stream and model mask to OpenCV window.
@@ -271,70 +262,6 @@ def display_video() -> None:
     custom_logging.log_event(f'Total Frames: {frame_counter}')
     custom_logging.log_event(f'Recorded FPS: {recorded_fps}')
     custom_logging.append_to_log_data(data_dict, 'recorded_stream_data.csv')
-
-
-# def display_video() -> None:
-#     """
-#     Displays live stream and model mask to OpenCV window.
-#     :return: None
-#     """
-#     global is_streaming
-#     start_time = datetime.datetime.now()
-#     frame_counter = 0
-#
-#     while is_streaming:
-#
-#         if not DISPLAY_QUEUE.empty():
-#
-#             display_queue_size = DISPLAY_QUEUE.qsize()
-#             og_img, mask = DISPLAY_QUEUE.get()
-#             np_og_img = np.array(og_img)
-#             np_mask = np.array(mask)
-#             if mask is None:
-#                 break
-#
-#             num_images, height, width, num_channels = np_mask.shape
-#             masks = [np_mask[i] for i in range(num_images)]
-#
-#             for i in range(display_queue_size):
-#                 if i >= np_mask.shape[0]:
-#                     print('Mismatch in image batches')
-#                     break
-#
-#                 og_img = np_og_img[i]
-#                 mask_img = masks[i]
-#                 combined_img = np.vstack((og_img, mask_img))
-#
-#                 cv2.imshow("Frame", combined_img)
-#                 frame_counter += 1
-#
-#         if cv2.waitKey(1) & 0xFF == ord('q'):
-#             is_streaming = False
-#
-#             break
-#
-#     # 92
-#
-#     end_time = datetime.datetime.now()
-#     total_stream_time_seconds = (end_time - start_time).total_seconds()
-#     recorded_fps = frame_counter / total_stream_time_seconds
-#     data_dict = {'recorded_fps':recorded_fps,
-#                  'recorded_frames':frame_counter,
-#                  'total_stream_time':total_stream_time_seconds,
-#                  'input_fps':settings.INPUT_FPS,
-#                  'output_fps':settings.OUTPUT_FPS,
-#                  'ffmpeg_num_threads':settings.NUM_THREADS,
-#                  'custom_buffer_max_buffer_size':settings.MAX_BUFFER_SIZE,
-#                  'dilation_on':settings.DILATION_ON,
-#                  'erosion_on':settings.EROSION_ON,
-#                  'median_filtering_on':settings.MEDIAN_FILTERING_ON,
-#                  'gaussian_smoothing_on':settings.GAUSSIAN_SMOOTHING_ON}
-#
-#     custom_logging.log_event(f'Total Stream Time: {total_stream_time_seconds} seconds')
-#     custom_logging.log_event(f'Total Frames: {frame_counter}')
-#     custom_logging.log_event(f'Recorded FPS: {recorded_fps}')
-#
-#     custom_logging.append_to_log_data(data_dict, 'recorded_stream_data.csv')
 
 
 def stream_processing_threaded_executive() -> None:

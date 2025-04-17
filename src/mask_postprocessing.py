@@ -117,7 +117,6 @@ def apply_mask_postprocessing(raw: np.array, segmentation_mask: np.array) -> tup
     Returns:
         tuple: Processed raw image and segmentation mask.
     """
-    print("Applying mask postprocessing...")
 
     mask_rgb = settings.COLOR_MAP[segmentation_mask]
 
@@ -135,9 +134,6 @@ def apply_mask_postprocessing(raw: np.array, segmentation_mask: np.array) -> tup
 
     # if ui_input_variables.CRF_ON:
     #     mask = apply_crf(raw, segmentation_mask)
-
-    print(f'Applying Postprocessing - beta...')
-    print(mask_rgb.shape)
 
     # Remove the batch dimension (1,) from the input array
     # rgb_array = mask_rgb[0]

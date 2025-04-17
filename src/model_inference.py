@@ -52,7 +52,7 @@ def load_segmentation_model(model_path: str) -> tuple:
     else:
         device = torch.device('cpu')
     model = torch.load(model_path, map_location=device)
-    
+
     model = prune_model(model)
     model.to(device)
 

@@ -56,14 +56,14 @@ if __name__ == "__main__":
 
     print("Function running on thread:", threading.current_thread().name)
 
-    # if settings.SHOW_DEBUG_PROFILE:
-    #     profiler = cProfile.Profile()
-    #     profiler.enable()
+    if settings.SHOW_DEBUG_PROFILE:
+        profiler = cProfile.Profile()
+        profiler.enable()
 
-    execute_application()
+        execute_application()
 
-        # profiler.disable()
-        # stats = pstats.Stats(profiler).sort_stats('cumtime')
-        # stats.print_stats()
-    # else:
-        # execute_application()
+        profiler.disable()
+        stats = pstats.Stats(profiler).sort_stats('cumtime')
+        stats.print_stats()
+    else:
+        execute_application()

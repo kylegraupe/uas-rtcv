@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=30&duration=2000&pause=10000&color=0FFFD0&center=false&vCenter=true&width=1000&lines=Unmanned+Aerial+System+Real Time+Computer+Vision" alt="Typing SVG" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=30&duration=2000&pause=10000&color=0FFFD0&center=true&vCenter=true&width=1000&lines=Unmanned%20Aerial%20System%20-%20Real%20Time%20Computer%20Vision" alt="Typing SVG" />
 </h1>
 
 ⭐ **Please leave a star!**

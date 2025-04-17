@@ -2,7 +2,12 @@ import ffmpeg
 import time
 import itertools
 from pathlib import Path
-
+import time, subprocess
+import torch
+import time
+import time
+import torch
+import numpy as np
 import settings
 
 def ffmpeg_gs():
@@ -58,9 +63,52 @@ def ffmpeg_gs():
                 f.write(f"Test {i} Failed: {e}\n")
             print(f'Iteration Failed {i}, {codec=}, {preset=}, {bufsize=}, {thread=}, {fps=}, {pix_fmt=}')
 
+def test_ffmpeg_stream():
+    frame_count = 100
+    frame_size = 1280 * 720 * 3
 
+    start = time.time()
 
+    process = (
+        ffmpeg
+        .input(settings.RTMP_URL, an=None)  # Disable audio
+        .output('pipe:', format='rawvideo', pix_fmt='bgr24', r=f'{settings.INPUT_FPS}')
+        .global_args('-c:v', 'libfdk_aac', '-rtbufsize', '10k')
+        .global_args('-preset', 'ultrafast', '-threads', '4')
+        .run_async(pipe_stdout=settings.PIPE_STDOUT, pipe_stderr=settings.PIPE_STDERR)
+    )
 
+    for _ in range(frame_count):
+        raw = process.stdout.read(frame_size)
+        if not raw:
+            break
+
+    end = time.time()
+    print(f"RTMP throughput: {frame_count / (end - start):.2f} FPS")
+
+    process.kill()
+
+def test_model():
+    # Create random tensor shaped like your input
+    dummy_input = torch.randn(1, 3, 704, 1280).to("mps" if torch.backends.mps.is_available() else "cpu")
+
+    device = torch.device('mps' if torch.backends.mps.is_available() else 'cpu')
+    model = torch.load(settings.MODEL_PATH, map_location=device)
+
+    # Warm up
+    for _ in range(10):
+        _ = model(dummy_input)
+
+    # Measure
+    start = time.time()
+    for _ in range(50):
+        with torch.no_grad():
+            _ = model(dummy_input)
+    end = time.time()
+
+    print(f"Model FPS: {50 / (end - start):.2f}")
 
 if __name__ == "__main__":
-    ffmpeg_gs()
+    # ffmpeg_gs()
+    # test_ffmpeg_stream()
+    test_model()

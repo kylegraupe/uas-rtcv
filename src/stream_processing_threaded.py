@@ -17,6 +17,7 @@ import settings
 from src import model_inference, mask_postprocessing, custom_logging
 from src.settings import INPUT_FPS
 
+ffmpeg_process = None
 is_streaming: bool = True
 BUFFER_QUEUE: queue.Queue = queue.Queue(maxsize=settings.MAX_BUFFER_SIZE)
 DISPLAY_QUEUE: queue.Queue = queue.Queue(maxsize=5)
@@ -56,44 +57,88 @@ def add_to_buffer(frame: np.array, buffer_queue: queue.Queue) -> None:
     buffer_queue.put(frame)
 
 
+# def produce_livestream_buffer(url: str) -> None:
+#     """
+#     Produces livestream buffer using FFMPEG and custom buffer in Producer-Consumer Threading Paradigm.
+#
+#     :param url: RTMP URL (in settings.py)
+#     :return: None
+#     """
+#     #
+#     process = (
+#         ffmpeg
+#         .input(url, an=None)  # Disable audio
+#         .output('pipe:', format='rawvideo', pix_fmt='bgr24', r=f'{settings.INPUT_FPS}')
+#         .global_args('-c:v', 'libfdk_aac', '-rtbufsize', '10k')
+#         .global_args('-preset', 'ultrafast', '-threads', '4')
+#         .run_async(pipe_stdout=settings.PIPE_STDOUT, pipe_stderr=settings.PIPE_STDERR)
+#     )
+#
+#     # process = (
+#     #     ffmpeg
+#     #     .input(url, an=None)
+#     #     .output('pipe:', format='rawvideo', pix_fmt=settings.PIX_FORMAT, r=f'{settings.INPUT_FPS}')
+#     #     .global_args('-c:v', settings.CODEC, '-rtbufsize', settings.BUFSIZE)
+#     #     .global_args('-preset', settings.PRESET, '-threads', f'{settings.NUM_THREADS}')
+#     #     .run_async(pipe_stdout=True, pipe_stderr=True)
+#     # )
+#
+#     while is_streaming:
+#         in_bytes = process.stdout.read(settings.FRAME_SIZE)
+#         if len(in_bytes) != settings.FRAME_SIZE:
+#             if not in_bytes:
+#                 print("End of stream or error reading frame")
+#                 break
+#             else:
+#                 print("Error: Read incomplete frame")
+#                 break
+#
+#         in_frame = np.frombuffer(in_bytes, np.uint8).reshape([720, 1280, 3]).copy()
+#         add_to_buffer(in_frame, BUFFER_QUEUE)
+
 def produce_livestream_buffer(url: str) -> None:
     """
     Produces livestream buffer using FFMPEG and custom buffer in Producer-Consumer Threading Paradigm.
-
     :param url: RTMP URL (in settings.py)
     :return: None
     """
-    #
-    process = (
+    global ffmpeg_process
+
+    # ffmpeg_process = (
+    #     ffmpeg
+    #     .input(url, an=None)  # Disable audio
+    #     .output('pipe:', format='rawvideo', pix_fmt='bgr24', r=f'{settings.INPUT_FPS}')
+    #     .global_args('-preset', 'ultrafast', '-threads', '4')
+    #     .run_async(pipe_stdout=settings.PIPE_STDOUT, pipe_stderr=settings.PIPE_STDERR)
+    # )
+
+    ffmpeg_process = (
         ffmpeg
         .input(url, an=None)  # Disable audio
         .output('pipe:', format='rawvideo', pix_fmt='bgr24', r=f'{settings.INPUT_FPS}')
-        .global_args('-c:v', 'libfdk_aac', '-rtbufsize', '10k')
+        .global_args('-c:v', 'libfdk_aac', '-rtbufsize', '500k')
         .global_args('-preset', 'ultrafast', '-threads', '4')
         .run_async(pipe_stdout=settings.PIPE_STDOUT, pipe_stderr=settings.PIPE_STDERR)
     )
 
-    # process = (
-    #     ffmpeg
-    #     .input(url, an=None)
-    #     .output('pipe:', format='rawvideo', pix_fmt=settings.PIX_FORMAT, r=settings.INPUT_FPS)
-    #     .global_args('-c:v', settings.CODEC, '-rtbufsize', settings.BUFSIZE)
-    #     .global_args('-preset', settings.PRESET, '-threads', settings.NUM_THREADS)
-    #     .run_async(pipe_stdout=True, pipe_stderr=True)
-    # )
-
-    while is_streaming:
-        in_bytes = process.stdout.read(settings.FRAME_SIZE)
-        if len(in_bytes) != settings.FRAME_SIZE:
-            if not in_bytes:
-                print("End of stream or error reading frame")
+    try:
+        while is_streaming:
+            in_bytes = ffmpeg_process.stdout.read(settings.FRAME_SIZE)
+            if len(in_bytes) != settings.FRAME_SIZE:
+                print("Stream ended or broken frame read.")
                 break
-            else:
-                print("Error: Read incomplete frame")
-                break
-
-        in_frame = np.frombuffer(in_bytes, np.uint8).reshape([720, 1280, 3]).copy()
-        add_to_buffer(in_frame, BUFFER_QUEUE)
+            in_frame = np.frombuffer(in_bytes, np.uint8).reshape([720, 1280, 3]).copy()
+            add_to_buffer(in_frame, BUFFER_QUEUE)
+    finally:
+        # Ensure the process is killed when the loop exits
+        if ffmpeg_process:
+            ffmpeg_process.stdout.close()
+            ffmpeg_process.stderr.close()
+            ffmpeg_process.terminate()
+            try:
+                ffmpeg_process.wait(timeout=2)
+            except:
+                ffmpeg_process.kill()
 
 
 def consume_livestream_buffer() -> None:
@@ -120,7 +165,6 @@ def consume_livestream_buffer() -> None:
             ).astype(np.uint8)
 
             _, segmentation_result_batch_processed = mask_postprocessing.apply_mask_postprocessing(frame_batch_resized,
-
                                                                                  segmentation_result_batch)
 
             if settings.SIDE_BY_SIDE:
@@ -160,14 +204,13 @@ def display_video() -> None:
     Displays live stream and model mask to OpenCV window.
     :return: None
     """
-    global is_streaming
+    global is_streaming, ffmpeg_process
+
     start_time = datetime.datetime.now()
     frame_counter = 0
 
     while is_streaming:
-
         if not DISPLAY_QUEUE.empty():
-
             display_queue_size = DISPLAY_QUEUE.qsize()
             og_img, mask = DISPLAY_QUEUE.get()
             np_og_img = np.array(og_img)
@@ -194,28 +237,104 @@ def display_video() -> None:
             is_streaming = False
             break
 
-    # 92
+    # Cleanup ffmpeg process
+    if ffmpeg_process:
+        try:
+            ffmpeg_process.stdout.close()
+            ffmpeg_process.stderr.close()
+            ffmpeg_process.terminate()
+            ffmpeg_process.wait(timeout=2)
+        except:
+            ffmpeg_process.kill()
 
+    cv2.destroyAllWindows()
+
+    # Logging
     end_time = datetime.datetime.now()
     total_stream_time_seconds = (end_time - start_time).total_seconds()
     recorded_fps = frame_counter / total_stream_time_seconds
-    data_dict = {'recorded_fps':recorded_fps,
-                 'recorded_frames':frame_counter,
-                 'total_stream_time':total_stream_time_seconds,
-                 'input_fps':settings.INPUT_FPS,
-                 'output_fps':settings.OUTPUT_FPS,
-                 'ffmpeg_num_threads':settings.NUM_THREADS,
-                 'custom_buffer_max_buffer_size':settings.MAX_BUFFER_SIZE,
-                 'dilation_on':settings.DILATION_ON,
-                 'erosion_on':settings.EROSION_ON,
-                 'median_filtering_on':settings.MEDIAN_FILTERING_ON,
-                 'gaussian_smoothing_on':settings.GAUSSIAN_SMOOTHING_ON}
+    data_dict = {
+        'recorded_fps': recorded_fps,
+        'recorded_frames': frame_counter,
+        'total_stream_time': total_stream_time_seconds,
+        'input_fps': settings.INPUT_FPS,
+        'output_fps': settings.OUTPUT_FPS,
+        'ffmpeg_num_threads': settings.NUM_THREADS,
+        'custom_buffer_max_buffer_size': settings.MAX_BUFFER_SIZE,
+        'dilation_on': settings.DILATION_ON,
+        'erosion_on': settings.EROSION_ON,
+        'median_filtering_on': settings.MEDIAN_FILTERING_ON,
+        'gaussian_smoothing_on': settings.GAUSSIAN_SMOOTHING_ON
+    }
 
     custom_logging.log_event(f'Total Stream Time: {total_stream_time_seconds} seconds')
     custom_logging.log_event(f'Total Frames: {frame_counter}')
     custom_logging.log_event(f'Recorded FPS: {recorded_fps}')
-
     custom_logging.append_to_log_data(data_dict, 'recorded_stream_data.csv')
+
+
+# def display_video() -> None:
+#     """
+#     Displays live stream and model mask to OpenCV window.
+#     :return: None
+#     """
+#     global is_streaming
+#     start_time = datetime.datetime.now()
+#     frame_counter = 0
+#
+#     while is_streaming:
+#
+#         if not DISPLAY_QUEUE.empty():
+#
+#             display_queue_size = DISPLAY_QUEUE.qsize()
+#             og_img, mask = DISPLAY_QUEUE.get()
+#             np_og_img = np.array(og_img)
+#             np_mask = np.array(mask)
+#             if mask is None:
+#                 break
+#
+#             num_images, height, width, num_channels = np_mask.shape
+#             masks = [np_mask[i] for i in range(num_images)]
+#
+#             for i in range(display_queue_size):
+#                 if i >= np_mask.shape[0]:
+#                     print('Mismatch in image batches')
+#                     break
+#
+#                 og_img = np_og_img[i]
+#                 mask_img = masks[i]
+#                 combined_img = np.vstack((og_img, mask_img))
+#
+#                 cv2.imshow("Frame", combined_img)
+#                 frame_counter += 1
+#
+#         if cv2.waitKey(1) & 0xFF == ord('q'):
+#             is_streaming = False
+#
+#             break
+#
+#     # 92
+#
+#     end_time = datetime.datetime.now()
+#     total_stream_time_seconds = (end_time - start_time).total_seconds()
+#     recorded_fps = frame_counter / total_stream_time_seconds
+#     data_dict = {'recorded_fps':recorded_fps,
+#                  'recorded_frames':frame_counter,
+#                  'total_stream_time':total_stream_time_seconds,
+#                  'input_fps':settings.INPUT_FPS,
+#                  'output_fps':settings.OUTPUT_FPS,
+#                  'ffmpeg_num_threads':settings.NUM_THREADS,
+#                  'custom_buffer_max_buffer_size':settings.MAX_BUFFER_SIZE,
+#                  'dilation_on':settings.DILATION_ON,
+#                  'erosion_on':settings.EROSION_ON,
+#                  'median_filtering_on':settings.MEDIAN_FILTERING_ON,
+#                  'gaussian_smoothing_on':settings.GAUSSIAN_SMOOTHING_ON}
+#
+#     custom_logging.log_event(f'Total Stream Time: {total_stream_time_seconds} seconds')
+#     custom_logging.log_event(f'Total Frames: {frame_counter}')
+#     custom_logging.log_event(f'Recorded FPS: {recorded_fps}')
+#
+#     custom_logging.append_to_log_data(data_dict, 'recorded_stream_data.csv')
 
 
 def stream_processing_threaded_executive() -> None:

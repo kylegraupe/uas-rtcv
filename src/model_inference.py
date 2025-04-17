@@ -5,18 +5,33 @@ Video frames are passed to the model and the predicted RGB mask is returned.
 """
 
 from torchvision import transforms
-import torch
 import time
-
+import torch
+from torch.quantization import quantize_dynamic
+from torch.nn.utils import prune
 from PIL import Image
 import numpy as np
-
 
 preprocess = transforms.Compose([
     transforms.Resize((704, 1280)),
     transforms.ToTensor(),
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
+
+def prune_model(model, amount=0.3):
+    for name, module in model.named_modules():
+        if isinstance(module, torch.nn.Conv2d):
+            prune.l1_unstructured(module, name='weight', amount=amount)
+            prune.remove(module, 'weight')  # Finalize pruning
+    return model
+
+def quantize_model(model):
+    quantized_model = quantize_dynamic(
+        model,  # Your original model
+        {torch.nn.Linear},  # Layers to quantize
+        dtype=torch.qint8
+    )
+    return quantized_model
 
 
 def load_segmentation_model(model_path: str) -> tuple:
@@ -29,9 +44,23 @@ def load_segmentation_model(model_path: str) -> tuple:
     Returns:
         model (nn.Module): The loaded segmentation model.
     """
-    device = torch.device('mps' if torch.cuda.is_available() else 'cpu')
+
+    if torch.cuda.is_available():
+        device = torch.device('cuda')
+    elif torch.backends.mps.is_available():
+        device = torch.device('mps')
+    else:
+        device = torch.device('cpu')
     model = torch.load(model_path, map_location=device)
+    
+    model = prune_model(model)
     model.to(device)
+
+    if device.type == 'cpu':
+        model = quantize_model(model)
+
+    model.eval()
+
     print(f'\nModel loaded from "{model_path}" at time {time.ctime()}')
 
     model.eval()

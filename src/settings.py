@@ -23,7 +23,7 @@ def get_ip() -> str:
 # Application Environment
 ENVIRONMENT: str = 'development'
 TRAIN: bool = False
-SHOW_DEBUG_PROFILE: bool = True
+SHOW_DEBUG_PROFILE: bool = False
 
 # Primary Settings
 NONTHREADED_UI_ON: bool = False
@@ -66,6 +66,8 @@ COLOR_MAP: np.array = np.array([
     [128, 64, 128],   # Class 21: medium purple
     [0, 192, 128],    # Class 22: aquamarine
 ], dtype=np.uint8)
+CLASS_DISPLAY_FILTER = [1, 5, 7]  # dark red, dark purple, gray
+
 INVERTED_COLOR_MAP = {tuple(color): label for label, color in enumerate(COLOR_MAP)}
 
 NUM_CHANNELS: int = 3 # RGB

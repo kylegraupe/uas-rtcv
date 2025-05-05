@@ -152,6 +152,52 @@ def display_video() -> None:
     Displays live stream and model mask to OpenCV window.
     :return: None
     """
+
+    def display_stacked_frame(img_1, img_2):
+        combined_img = np.vstack((og_img, mask_img))
+
+        cv2.imshow("Frame", combined_img)
+
+    def display_image(image: np.ndarray):
+        """
+        Display image using OpenCV.
+
+        Args:
+            window_name (str): Window name
+            image (np.ndarray): Image to display
+        """
+        cv2.imshow('Filtered Class Overlay on Original Image', image)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+
+    def overlay_segmentation(original_image: np.ndarray, mask_image: np.ndarray, color_map: np.ndarray, alpha=0.5,
+                             class_filter=None):
+        """
+        Overlay segmentation mask on the original image using OpenCV.
+
+        Args:
+            original_image (np.ndarray): Original image (H, W, 3), RGB, uint8
+            mask_image (np.ndarray): Segmentation mask (H, W), integer class labels
+            color_map (np.ndarray): (num_classes, 3) color map (RGB)
+            alpha (float): Transparency of overlay [0.0 - 1.0]
+            class_filter (list, optional): List of class indices to filter and display. If None, shows all classes.
+
+        Returns:
+            overlayed_image (np.ndarray): Image with overlay (BGR, uint8)
+        """
+
+        # Validate input
+        if original_image.dtype != np.uint8:
+            raise ValueError("Original image must be dtype=np.uint8")
+        if original_image.shape[-1] != 3:
+            raise ValueError("Original image must have 3 channels (H, W, 3)")
+
+        original_bgr = cv2.cvtColor(original_image, cv2.COLOR_RGB2BGR)
+        color_mask_bgr = cv2.cvtColor(mask_image, cv2.COLOR_RGB2BGR)
+        overlayed_image = cv2.addWeighted(original_bgr, 1 - alpha, color_mask_bgr, alpha, 0)
+
+        return overlayed_image
+
     global is_streaming, ffmpeg_process
 
     start_time = datetime.datetime.now()
@@ -161,8 +207,9 @@ def display_video() -> None:
         if not DISPLAY_QUEUE.empty():
             display_queue_size = DISPLAY_QUEUE.qsize()
             og_img, mask = DISPLAY_QUEUE.get()
-            np_og_img = np.array(og_img)
-            np_mask = np.array(mask)
+            np_og_img, np_mask = np.array(og_img), np.array(mask)
+            # np_mask = np.array(mask)
+
             if mask is None:
                 break
 
@@ -174,11 +221,15 @@ def display_video() -> None:
                     print('Mismatch in image batches')
                     break
 
-                og_img = np_og_img[i]
-                mask_img = masks[i]
-                combined_img = np.vstack((og_img, mask_img))
+                og_img, mask_img = np_og_img[i], mask[i]
 
-                cv2.imshow("Frame", combined_img)
+                # display_stacked_frame(og_img, mask_img)
+                # mask_img = np.squeeze(mask_img)
+                print(mask_img.shape, og_img.shape)
+
+                overlayed_img = overlay_segmentation(og_img, mask_img, settings.COLOR_MAP)
+                cv2.imshow("Frame", overlayed_img)
+
                 frame_counter += 1
 
         if cv2.waitKey(1) & 0xFF == ord('q'):

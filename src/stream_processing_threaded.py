@@ -15,6 +15,8 @@ import os
 import datetime
 import settings
 from src import model_inference, mask_postprocessing, custom_logging
+import torch
+
 
 ffmpeg_process = None
 is_streaming: bool = True
@@ -214,7 +216,7 @@ def display_video() -> None:
                 break
 
             num_images, height, width, num_channels = np_mask.shape
-            masks = [np_mask[i] for i in range(num_images)]
+            # masks = [np_mask[i] for i in range(num_images)]
 
             for i in range(display_queue_size):
                 if i >= np_mask.shape[0]:
@@ -223,12 +225,12 @@ def display_video() -> None:
 
                 og_img, mask_img = np_og_img[i], mask[i]
 
-                # display_stacked_frame(og_img, mask_img)
-                # mask_img = np.squeeze(mask_img)
-                print(mask_img.shape, og_img.shape)
+                if settings.STACKED_DISPLAY:
+                    display_stacked_frame(og_img, mask_img)
 
-                overlayed_img = overlay_segmentation(og_img, mask_img, settings.COLOR_MAP)
-                cv2.imshow("Frame", overlayed_img)
+                if settings.OVERLAY_DISPLAY:
+                    overlayed_img = overlay_segmentation(og_img, mask_img, settings.COLOR_MAP)
+                    cv2.imshow("Frame", overlayed_img)
 
                 frame_counter += 1
 

@@ -29,6 +29,8 @@ SHOW_DEBUG_PROFILE: bool = False
 NONTHREADED_UI_ON: bool = False
 THREADED_IMPLEMENTATION: bool = True
 RUN_TESTS_PRIOR_TO_EXECUTION: bool = False # FIXME: Keep false for now. Running into circular imports.
+STACKED_DISPLAY: bool = False
+OVERLAY_DISPLAY: bool = True
 
 # RTMP/NGINX settings
 LISTENING_PORT: int = 1935
@@ -67,7 +69,6 @@ COLOR_MAP: np.array = np.array([
     [0, 192, 128],    # Class 22: aquamarine
 ], dtype=np.uint8)
 CLASS_DISPLAY_FILTER = [1, 5, 7]  # dark red, dark purple, gray
-
 INVERTED_COLOR_MAP = {tuple(color): label for label, color in enumerate(COLOR_MAP)}
 
 NUM_CHANNELS: int = 3 # RGB

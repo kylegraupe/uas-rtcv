@@ -6,6 +6,11 @@
 
 This tool integrates the use of FFMPEG, RTMP Servers, and PyTorch for real time computer vision via an Unmanned Aerial Systems (i.e. DJI Drones), and is the only open-source project of the sort. 
 
+If you find this project helpful and would like to sponsor it's development, please follow the link below!
+
+----> [![Sponsor Kyle](https://img.shields.io/badge/Sponsor-❤️-brightgreen)](https://github.com/sponsors/kylegraupe)  <----
+
+
 ## 🎬 Application Trailer ⚠️
 
 To watch a short clip of the application in use, click [here](https://www.graupe.io/portfolio/real-time-computer-vision-streamed-via-dji-drone) on [graupe.io](https://www.graupe.io)!

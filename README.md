@@ -37,11 +37,10 @@ Stay tuned! Newest version solves latency issue and is in near real time! Traile
 ![uas_rtcv_test_flight](https://github.com/user-attachments/assets/6b717654-75de-4418-957d-0a8097e2173c)
 
 ---
+
 <h1 align="center">
   <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=30&duration=2000&pause=10000&startDelay=4000&color=E0AA3E&center=false&vCenter=true&width=1000&lines=LEAVE+A+STAR+OR+A+FOLLOW+IF+THIS+REPO+IS+HELPFUL!" alt="Typing SVG" />
 </h1>
-
----
 
 ## Context 
 

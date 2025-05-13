@@ -10,6 +10,23 @@ If you find this project helpful and would like to sponsor it's development, ple
 
 ----> [![Sponsor Kyle](https://img.shields.io/badge/Sponsor-❤️-brightgreen)](https://github.com/sponsors/kylegraupe)  <----
 
+**Why Sponsor This Project?**
+
+By sponsoring this project, you directly support the development of a real-time computer vision application using DJI drones — combining deep learning with live aerial video to enable advanced scene understanding from the sky.
+
+Your support could help fund:
+
+🧠 Training more accurate and efficient segmentation models (GPU time)
+
+🚁 Accessing better drone hardware for field testing
+
+☁️ Scaling up processing power for faster real-time inference
+
+🧪 Experimenting with edge AI deployments and low-latency pipelines
+
+📦 Open-sourcing more tools and datasets for the community
+
+Even small contributions go a long way in enabling innovation and keeping this project open and accessible.
 
 ## 🎬 Application Trailer ⚠️
 
